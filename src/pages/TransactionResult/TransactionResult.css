@@ -1,0 +1,27 @@
+.transaction-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.loading-message {
+  font-size: 1.1rem;
+}
+
+.transaction-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.transaction-title {
+  color: #333;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
