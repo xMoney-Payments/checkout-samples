@@ -61,12 +61,13 @@
   .total {
     font-weight: bold;
     margin-top: 20px;
-    color: #fff; /* White color for the total text */
+    color: #fff;
+    /* White color for the total text */
   }
 
   .pay-button {
     padding: 10px 15px;
-    background-color: #3a7f3c;
+    background-color: #412297;
     color: white;
     border: none;
     border-radius: 4px;
@@ -74,7 +75,7 @@
   }
 
   .pay-button:hover {
-    background-color: #2e6b2f;
+    background-color: #6C37FE;
   }
 
   .pay-button:disabled {

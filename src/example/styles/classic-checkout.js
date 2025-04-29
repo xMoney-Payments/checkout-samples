@@ -16,7 +16,7 @@ export const classicCheckoutStyles = {
       gridColumn: "1 / 3",
     },
     ".checkout-input": {
-      border: "1px solid #ccc",
+      border: "1px solid #D1CDDB",
       borderRadius: "6px",
       padding: "5px",
       height: "48px",
