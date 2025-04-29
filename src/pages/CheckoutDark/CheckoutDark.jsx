@@ -97,7 +97,7 @@ function CheckoutDark() {
         <div class="loading">Loading checkout...</div>
       </div>
       <div class={`checkout-container ${isLoading() ? "loading" : ""}`}>
-        <h2>Embedded Components P.O.C.</h2>
+        <h2>Embedded Components Single Card Input Dark</h2>
         <form id="checkout-form">
           <h3>Personal Info</h3>
           <input

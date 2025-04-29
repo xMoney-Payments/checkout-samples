@@ -42,7 +42,7 @@ function CheckoutLight() {
     const isEmailValid = validateField("email", "Valid email is required");
     const isCardNameValid = validateField("cardName", "Card name is required");
     const { cardNumberError, expDateError, cvvError } =
-      await xMoneyCheckout.validate();
+      await xMoneyCheckout.validate(false);
     const isSdkValuesValid = validateSdk(
       cardNumberError || expDateError || cvvError
     );
@@ -96,7 +96,7 @@ function CheckoutLight() {
         <div class="loading">Loading checkout...</div>
       </div>
       <div class={`checkout-container ${isLoading() ? "loading" : ""}`}>
-        <h2>Embedded Components P.O.C.</h2>
+        <h2>Embedded Components Single Card Input</h2>
         <form id="checkout-form">
           <h3>Personal Info</h3>
           <input
@@ -140,7 +140,7 @@ function CheckoutLight() {
             type="text"
             id="cardName"
             name="cardName"
-            placeholder="Card Name"
+            placeholder="Cardholder Name"
             value={formData().cardName}
             onInput={(e) =>
               setFormData({ ...formData(), cardName: e.target.value })

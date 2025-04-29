@@ -6,42 +6,48 @@ body {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(228, 232, 239, .5);
   width: 350px;
 }
+
 form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 input {
   border: 1px solid #ccc;
   border-radius: 6px;
   height: 36px;
   padding: 5px;
 }
+
 .error {
   color: red;
   font-size: 12px;
 }
+
 button {
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 6px;
-  height: 36px;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #0056b3;
 }
+
 .total {
   font-weight: bold;
   text-align: right;
 }
 
 .checkout-container.loading {
-  display: none; /* Hide the form */
+  display: none;
+  /* Hide the form */
 }
 
 .loading-none {
@@ -54,7 +60,8 @@ button:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  background: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent overlay */
   color: white;
   text-align: center;
   display: flex;
