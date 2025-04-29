@@ -4,6 +4,7 @@ import "./CheckoutDark.css";
 
 function CheckoutDark() {
   let xMoneyCheckout;
+  let xMoneyPublicKey = 'pk_test_8389';
   const [formData, setFormData] = createSignal({
     firstName: "",
     lastName: "",
@@ -67,13 +68,21 @@ function CheckoutDark() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData(), amount: 1, currency: "EUR" }),
+          body: JSON.stringify({ 
+            ...formData(), 
+            amount: 1,
+            currency: "EUR",
+            publicKey: xMoneyPublicKey,
+          }),
         }
       );
       const result = await response.json();
       if (!response.ok)
         throw new Error(result.error || "Failed to create payment intent");
-      await xMoneyCheckout.submitPayment(result);
+      await xMoneyCheckout.submitPayment({
+        base64Json: result.payload,
+        base64Checksum: result.checksum,
+      });
     } catch (error) {
       console.error("Error creating payment intent:", error);
     } finally {
