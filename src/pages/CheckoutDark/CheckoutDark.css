@@ -1,19 +1,42 @@
 .v-dark {
+  --container-border-color: #333;
+  --container-background-color: #1e1e1e;
+
+  --input-color: #fff;
+  --input-background: #2a2a2a;
+  --input-border-radius: 4px;
+  --input-font-family: Arial, sans-serif;
+
+  --placeholder-color: #888;
+  --placeholder-font-size: 13px;
+  --placeholder-font-family: Arial, sans-serif;
+
+  --label-font-size: 12px;
+  --label-font-weight: 600;
+  --label-color: #ccc;
+  --label-margin-bottom: 4px;
+  --label-font-family: Arial, sans-serif;
+  --label-padding: 0;
+
+  --error-font-size: 12px;
+  --error-color: #f44336;
+  --error-font-family: Arial, sans-serif;
+  --container-error-border-color: #f44336;
   .checkout-container {
-    font-family: Arial, sans-serif;
+    font-family: var(--input-font-family);
     padding: 20px;
     max-width: 600px;
     margin: 0 auto;
-    background-color: #1e1e1e;
-    color: #fff;
+    background-color: var(--container-background-color);
+    color: var(--input-color);
     border-radius: 8px;
-    border: 1px solid #333;
+    border: 1px solid var(--container-border-color);
   }
 
   h2 {
     font-size: 1.5rem;
     margin-bottom: 20px;
-    color: #fff;
+    color: var(--input-color);
   }
 
   form {
@@ -22,53 +45,54 @@
   }
 
   h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #ccc;
+    font-size: var(--label-font-size);
+    font-weight: var(--label-font-weight);
+    margin-bottom: var(--label-margin-bottom);
+    color: var(--label-color);
+    font-family: var(--label-font-family);
   }
 
   input {
-    padding: 6px;
+    padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    background-color: #2a2a2a;
-    color: #fff;
-    font-family: Arial, sans-serif;
+    border: 1px solid var(--container-border-color);
+    border-radius: var(--input-border-radius);
+    background-color: var(--input-background);
+    color: var(--input-color);
+    font-family: var(--input-font-family);
   }
 
   input::placeholder {
-    color: #888;
-    font-size: 13px;
-    font-family: Arial, sans-serif;
+    color: var(--placeholder-color);
+    font-size: var(--placeholder-font-size);
+    font-family: var(--placeholder-font-family);
   }
 
   input:focus {
-    outline: rgba(78, 158, 255, 0.4);
+    outline: var(--container-focus-outline);
   }
 
   .error {
-    color: #f44336;
-    font-size: 12px;
-    font-family: Arial, sans-serif;
+    color: var(--error-color);
+    font-size: var(--error-font-size);
+    font-family: var(--error-font-family);
     margin-bottom: 10px;
   }
 
   .sdk-container {
-    height: 55px;
+    height: 62px;
   }
 
   .total {
     font-weight: bold;
     margin-top: 20px;
-    color: #fff;
-    /* White color for the total text */
+    color: var(--input-color);
   }
 
   .pay-button {
     padding: 10px 15px;
     background-color: #412297;
-    color: #fff;
+    color: var(--input-color);
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -80,7 +104,7 @@
   }
 
   .pay-button:hover {
-    background-color: #6C37FE;
+    background-color: #6c37fe;
     transform: translateY(-1px);
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   }

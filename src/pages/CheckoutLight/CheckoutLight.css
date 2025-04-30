@@ -1,18 +1,42 @@
 .v-light {
+  --color-border-input: #d1cddb;
+  --color-input-focus: #006cff;
+  --color-text-body: #201e25;
+  --container-border-color: #d1cddb;
+  --container-border-radius: 6px;
+  --container-padding: 0;
+  --container-background-color: #efeef1;
+  --container-focus-outline: none;
+  --container-focus-shadow: none;
+  --container-focus-shadow-error: none;
+  --container-error-border-color: #a94442;
+  --input-padding: 10px 16px;
+  --input-height: 56px;
+  --input-font-size: 18px;
+  --input-color: #201e25;
+  --input-background: #fff;
+  --input-border-radius: 6px;
+  --input-font-family: "Open Sans", "Helvetica Neue", sans-serif;
+  --placeholder-color: #d1cddb;
+  --placeholder-font-size: 18px;
+  --error-font-size: 12px;
+  --error-color: #a94442;
+  --error-margin-top: 4px;
+  --error-font-family: "Open Sans", "Helvetica Neue", sans-serif;
   .checkout-container {
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--input-font-family, "Roboto", sans-serif);
     padding: 20px;
     max-width: 600px;
     margin: 0 auto;
-    background-color: #EFEEF1;
-    border-radius: 8px;
-    border: 1px solid #D1CDDB;
+    background-color: var(--container-background-color, #efeef1);
+    border-radius: var(--container-border-radius, 6px);
+    border: 1px solid var(--container-border-color, #d1cddb);
   }
 
   h2 {
     font-size: 1.5rem;
     margin-bottom: 20px;
-    color: #201E25;
+    color: var(--color-text-body, #201e25);
   }
 
   form {
@@ -23,36 +47,48 @@
   h3 {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: #2D2A34;
+    color: var(--color-text-body, #2d2a34);
   }
 
   input {
-    padding: 8px 14px;
+    padding: var(--input-padding, 10px 16px);
     margin-bottom: 2px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    border-radius: var(--input-border-radius, 6px);
+    border: 1px solid var(--color-border-input, #ccc);
+    font-family: var(--input-font-family, "Roboto", sans-serif);
+    font-size: var(--input-font-size, 16px);
+    color: var(--input-color, #201e25);
+    background: var(--input-background, transparent);
+  }
+
+  input:focus {
+    outline: var(--container-focus-outline, none);
+    border-color: var(--color-input-focus, #006cff);
+  }
+  input::placeholder {
+    color: var(--placeholder-color, #d1cddb);
+    font-size: var(--placeholder-font-size, 16px);
   }
 
   .error {
-    color: #f00;
-    font-size: 0.9rem;
-    margin-bottom: 6px;
+    color: var(--error-color, #f00);
+    font-size: var(--error-font-size, 0.9rem);
+    margin-bottom: var(--error-margin-top, 6px);
   }
 
   .sdk-container {
-    height: 55px;
+    height: 62px;
   }
 
   .total {
     font-weight: bold;
     margin-top: 20px;
-    color: #201E25;
+    color: var(--color-text-body, #201e25);
   }
 
   .pay-button {
     padding: 10px 15px;
-    background-color: #7C4DFF;
+    background-color: #7c4dff;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -65,7 +101,7 @@
   }
 
   .pay-button:hover {
-    background-color: #6C37FE;
+    background-color: #6c37fe;
     transform: translateY(-1px);
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   }
@@ -75,7 +111,6 @@
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   }
 
-  /* Additional media query for responsiveness */
   @media (max-width: 768px) {
     .checkout-container {
       padding: 10px;
