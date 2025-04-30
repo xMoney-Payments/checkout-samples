@@ -7,19 +7,32 @@ export const classicCheckoutStyles = {
       gridTemplateColumns: "1fr 1fr",
       "font-family": "Arial, sans-serif",
     },
+
     ".embeded-components-container label": {
       display: "flex",
       flexDirection: "column",
       gap: "4px",
     },
-    ".embeded-components-container label:nth-child(1)": {
+    ".embeded-components-container .card-number-group": {
       gridColumn: "1 / 3",
+      position: "relative",
     },
+    ".card-icon": {
+      position: "absolute",
+      top: "44px",
+      left: "10px",
+      transform: "translateY(-50%)",
+      pointerEvents: "none",
+    },
+
     ".checkout-input": {
       border: "1px solid #D1CDDB",
       borderRadius: "6px",
       padding: "5px",
       height: "48px",
+    },
+    ".card-number": {
+      padding: "0 0 0 32px",
     },
     ".embeded-components-container .label-text": {
       fontSize: "14px",

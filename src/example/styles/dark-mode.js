@@ -7,6 +7,8 @@ export const darkModeStyles = {
     inputBackground: "#2a2a2a",
     inputBorderRadius: "4px",
     inputFontFamily: "Arial, sans-serif",
+    inputFontSize: "16px",
+    colorInputFocus: "transparent",
 
     placeholderColor: "#888",
     placeholderFontSize: "13px",
@@ -14,7 +16,7 @@ export const darkModeStyles = {
 
     containerFocusOutline: "rgba(78, 158, 255, 0.6)",
 
-    labelFontSize: "12px",
+    labelFontSize: "14px",
     labelFontWeight: "600",
     labelColor: "#ccc",
     labelMarginBottom: "4px",
