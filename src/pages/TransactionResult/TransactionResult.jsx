@@ -17,7 +17,7 @@ const TransactionResult = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:3001/transaction-result",
+          "http://localhost:3001/payment-confirm",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
