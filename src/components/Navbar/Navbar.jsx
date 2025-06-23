@@ -19,6 +19,11 @@ const Navbar = () => {
             Checkout Dark
           </a>
         </li>
+        <li>
+          <a href="/payments" className="navbar-link">
+            Payments
+          </a>
+        </li>
       </ul>
     </nav>
   );
