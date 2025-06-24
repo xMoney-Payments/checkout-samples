@@ -1,6 +1,7 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { classicCheckoutStyles } from "../../example/styles/index";
+import { createPaymentIntent } from "../../api";
 
 declare global {
   interface Window {
@@ -13,39 +14,32 @@ interface PaymentFormProps {
   sdkError: string;
   setSdkError: (msg: string) => void;
   setIsLoading: (loading: boolean) => void;
-  checkoutInstanceRef: (instance: any) => void;
-  savedCards: any[];
+  paymentFormInstanceRef: (instance: any) => void;
+  savedCards: any;
   result: any;
 }
 
 export function PaymentForm(props: PaymentFormProps): JSX.Element {
-  let checkoutInstance: any;
+  let paymentFormInstance: any;
   const [isReady, setIsReady] = createSignal(false);
 
-  const resetSdk = (): void => {
-    checkoutInstance?.destroy?.();
-    const container = document.getElementById("payment-widget");
-    if (container) container.innerHTML = "";
+  console.log(props.savedCards);
+  console.log(props.result);
 
-    checkoutInstance = new window.XMoneyPaymentForm({
-      container: "payment-widget",
+  onMount(async () => {
+    paymentFormInstance = new window.XMoneyPaymentForm({
+      container: "payment-form-widget",
+      onReady: () => setIsReady(true),
       elementsOptions: { appearance: classicCheckoutStyles },
       onError: (err: any) => console.error("❌ Payment error", err),
-      onReady: () => setIsReady(true),
-      savedCards: props.savedCards,
-      checksum: props.result?.checksum,
-      json: props.result?.json,
+      savedCards: props.savedCards.data,
+      checksum: props.result.checksum,
+      json: props.result.payload,
     });
-
-    props.checkoutInstanceRef(checkoutInstance);
-  };
-
-  onMount(() => {
-    resetSdk();
   });
 
   onCleanup(() => {
-    checkoutInstance?.destroy?.();
+    paymentFormInstance?.destroy?.();
   });
 
   return (
@@ -63,7 +57,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         </div>
       )}
       <div
-        id="payment-widget"
+        id="payment-form-widget"
         class={props.sdkError ? "sdk-container error" : "sdk-container"}
         style={{ opacity: isReady() ? 1 : 0 }}
       />
