@@ -5,12 +5,14 @@ import { Checkout } from "./pages/Checkout/Checkout";
 import CheckoutLight from "./pages/CheckoutLight/CheckoutLight";
 import CheckoutDark from "./pages/CheckoutDark/CheckoutDark";
 import TransactionResult from "./pages/TransactionResult/TransactionResult";
+import { Payments } from "./pages/Payments/Payments";
 
 const routes = [
   { path: "/", component: Checkout },
   { path: "/v-light", component: CheckoutLight },
   { path: "/v-dark", component: CheckoutDark },
   { path: "/transaction-result", component: TransactionResult },
+  { path: "/payments", component: Payments },
 ];
 
 export const App = () => {
