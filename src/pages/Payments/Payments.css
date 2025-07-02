@@ -1,0 +1,10 @@
+.v-payments {
+  .checkout-container {
+    font-family: "Roboto", sans-serif;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 8px;
+    color: #201e25;
+  }
+}

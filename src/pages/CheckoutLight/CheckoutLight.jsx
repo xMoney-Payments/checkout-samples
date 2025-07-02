@@ -1,19 +1,17 @@
 import { createSignal, onMount } from "solid-js";
 import "./CheckoutLight.css";
+import { PUBLIC_KEY } from "../../constants";
 
 function CheckoutLight() {
   let xMoneyCheckout;
-  let xMoneyPublicKey = 'pk_test_8389';
   const [isLoading, setIsLoading] = createSignal(true);
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [formData, setFormData] = createSignal({
     firstName: "",
     lastName: "",
     email: "",
-    cardName: "",
   });
   const [errors, setErrors] = createSignal({});
-  const [sdkError, setSdkError] = createSignal("");
 
   const validateField = (field, message) => {
     if (!formData()[field].trim()) {
@@ -21,15 +19,6 @@ function CheckoutLight() {
       return false;
     }
     setErrors((prev) => ({ ...prev, [field]: "" }));
-    return true;
-  };
-
-  const validateSdk = (message) => {
-    if (message) {
-      setSdkError(message);
-      return false;
-    }
-    setSdkError("");
     return true;
   };
 
@@ -41,18 +30,12 @@ function CheckoutLight() {
     );
     const isLastNameValid = validateField("lastName", "Last name is required");
     const isEmailValid = validateField("email", "Valid email is required");
-    const isCardNameValid = validateField("cardName", "Card name is required");
-    const { cardNumberError, expDateError, cvvError } =
-      await xMoneyCheckout.validate(false);
-    const isSdkValuesValid = validateSdk(
-      cardNumberError || expDateError || cvvError
-    );
-
+    const { isValid } = await xMoneyCheckout.validate(true);
+    const isSdkValuesValid = isValid;
     if (
       !isFirstNameValid ||
       !isLastNameValid ||
       !isEmailValid ||
-      !isCardNameValid ||
       !isSdkValuesValid
     ) {
       setIsSubmitting(false);
@@ -69,7 +52,7 @@ function CheckoutLight() {
             ...formData(),
             amount: 1,
             currency: "EUR",
-            publicKey: xMoneyPublicKey,
+            publicKey: PUBLIC_KEY,
           }),
         }
       );
@@ -90,6 +73,7 @@ function CheckoutLight() {
   onMount(() => {
     xMoneyCheckout = new XMoneyCheckout({
       container: "xMoney-checkout-light",
+      publicKey: xMoneyPublicKey,
       onError: (err) => console.error("❌ Payment error", err),
       onReady: () => setIsLoading(false),
     });
@@ -104,6 +88,7 @@ function CheckoutLight() {
         <h2>Embedded Components Single Card Input</h2>
         <form id="checkout-form">
           <h3>Personal Info</h3>
+          <lapel>First name</lapel>
           <input
             type="text"
             id="firstName"
@@ -141,23 +126,8 @@ function CheckoutLight() {
           <span class="error">{errors().email}</span>
 
           <h3>Card Info</h3>
-          <input
-            type="text"
-            id="cardName"
-            name="cardName"
-            placeholder="Cardholder Name"
-            value={formData().cardName}
-            onInput={(e) =>
-              setFormData({ ...formData(), cardName: e.target.value })
-            }
-          />
-          <span class="error">{errors().cardName}</span>
 
-          <div
-            id="xMoney-checkout-light"
-            class={sdkError() ? "sdk-container error" : "sdk-container"}
-          ></div>
-          <span class="error">{sdkError()}</span>
+          <div id="xMoney-checkout-light" class="sdk-container"></div>
 
           <span class="total">Total: 3954 EUR</span>
           <button

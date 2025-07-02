@@ -76,10 +76,6 @@
     margin-bottom: var(--error-margin-top, 6px);
   }
 
-  .sdk-container {
-    height: 62px;
-  }
-
   .total {
     font-weight: bold;
     margin-top: 20px;

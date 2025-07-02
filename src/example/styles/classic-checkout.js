@@ -1,53 +1,13 @@
-export const classicCheckoutStyles = {
-  noStyle: true,
-  rules: {
-    ".embeded-components-container": {
-      display: "grid",
-      gap: "12px",
-      gridTemplateColumns: "1fr 1fr",
-      "font-family": "Arial, sans-serif",
-    },
-
-    ".embeded-components-container label": {
-      display: "flex",
-      flexDirection: "column",
-      gap: "4px",
-    },
-    ".embeded-components-container .card-number-group": {
-      gridColumn: "1 / 3",
-      position: "relative",
-    },
-    ".card-icon": {
-      position: "absolute",
-      top: "44px",
-      left: "10px",
-      transform: "translateY(-50%)",
-      pointerEvents: "none",
-    },
-
-    ".checkout-input": {
-      border: "1px solid #D1CDDB",
-      borderRadius: "6px",
-      padding: "5px",
-      height: "48px",
-    },
-    ".card-number": {
-      padding: "0 0 0 32px",
-    },
-    ".embeded-components-container .label-text": {
-      fontSize: "14px",
-    },
-    ".label-text": {
-      display: "block",
-    },
-    ".error-text": {
-      fontSize: "12px",
-      color: "red",
-      marginTop: "4px",
-      display: "none",
-    },
-    ".checkout-input.error": {
-      borderColor: "red",
-    },
+export const customThemeStyles = {
+  variables: {
+    colorPrimary: "#009688",
+    colorDanger: "#e53935",
+    colorText: "#212121",
+    colorTextSecondary: "#757575",
+    colorTextPlaceholder: "#bdbdbd",
+    colorBorder: "#e0e0e0",
+    colorBorderFocus: "#009688",
+    colorBackground: "#f5f5f5",
+    colorBackgroundFocus: "#0096880a",
   },
 };
