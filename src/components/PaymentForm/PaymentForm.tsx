@@ -1,19 +1,15 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { classicCheckoutStyles } from "../../example/styles/index";
-import { createPaymentIntent } from "../../api";
+import { customThemeStyles } from "../../example/styles/index";
+import { PUBLIC_KEY } from "../../constants";
 
 declare global {
   interface Window {
-    XMoneyCheckout: any;
     XMoneyPaymentForm: any;
   }
 }
 
 interface PaymentFormProps {
-  sdkError: string;
-  setSdkError: (msg: string) => void;
-  setIsLoading: (loading: boolean) => void;
   paymentFormInstanceRef: (instance: any) => void;
   savedCards: any;
   result: any;
@@ -23,18 +19,16 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
   let paymentFormInstance: any;
   const [isReady, setIsReady] = createSignal(false);
 
-  console.log(props.savedCards);
-  console.log(props.result);
-
   onMount(async () => {
     paymentFormInstance = new window.XMoneyPaymentForm({
       container: "payment-form-widget",
-      onReady: () => setIsReady(true),
-      elementsOptions: { appearance: classicCheckoutStyles },
-      onError: (err: any) => console.error("❌ Payment error", err),
+      elementsOptions: customThemeStyles,
       savedCards: props.savedCards.data,
       checksum: props.result.checksum,
-      json: props.result.payload,
+      jsonRequest: props.result.payload,
+      publicKey: PUBLIC_KEY,
+      onReady: () => setIsReady(true),
+      onError: (err: any) => console.error("❌ Payment error", err),
     });
   });
 
@@ -44,7 +38,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
 
   return (
     <div
-      class="embeded-components-container"
+      class="payment-form-container"
       style={{
         position: "relative",
         "border-radius": "8px",
@@ -53,14 +47,10 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
     >
       {!isReady() && (
         <div class="loading-overlay" style={{ "border-radius": "8px" }}>
-          <span>Loading embeded components...</span>
+          <span>Loading payment form...</span>
         </div>
       )}
-      <div
-        id="payment-form-widget"
-        class={props.sdkError ? "sdk-container error" : "sdk-container"}
-        style={{ opacity: isReady() ? 1 : 0 }}
-      />
+      <div id="payment-form-widget" style={{ opacity: isReady() ? 1 : 0 }} />
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import { createSignal, onCleanup } from "solid-js";
+import { createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import "./Checkout.css";
 import { PersonalInfo } from "../../components/PersonalInfo/PersonalInfo";
 import { XMoneyCheckoutWidget } from "../../components/EmbededComponents/EmbededComponents";
 import { SavedCards } from "../../components/SavedCards/SavedCards";
 import { createPaymentIntent } from "../../api";
+import { API_BASE, PUBLIC_KEY, USER_ID } from "../../constants";
 
 declare global {
   interface Window {
@@ -16,7 +17,6 @@ interface FormData {
   firstName: string;
   lastName: string;
   email: string;
-  cardName: string;
   cardId: string;
   saveCard: boolean;
 }
@@ -25,22 +25,16 @@ interface Card {
   id: string;
 }
 
-const API_BASE = "http://localhost:3001";
-const USER_ID = 61433;
-const PUBLIC_KEY = "pk_test_8389";
-
-export function Checkout(): JSX.Element {
+export default function Checkout(): JSX.Element {
   let checkoutInstance: any;
   let savedCardsInstance: any;
 
   const [showOtherCard, setShowOtherCard] = createSignal<boolean>(false);
-  const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [isSubmitting, setIsSubmitting] = createSignal<boolean>(false);
   const [formData, setFormData] = createSignal<FormData>({
-    firstName: "Danut",
-    lastName: "Ilie",
-    email: "danut.ilie@xmoney.com",
-    cardName: "Danut Ilie",
+    firstName: "customer_firstName",
+    lastName: "customer_lastName",
+    email: "customer.email@xmoney.com",
     cardId: "",
     saveCard: false,
   });
@@ -75,40 +69,26 @@ export function Checkout(): JSX.Element {
     const isLastNameValid = validateField("lastName", "Last name is required");
     const isEmailValid = validateField("email", "Valid email is required");
 
-    let isCardNameValid = true;
     let isSdkValid = true;
 
     if (!data.cardId) {
-      isCardNameValid = validateField(
-        "cardName",
-        "Cardholder name is required"
-      );
-
       const { cardNumberError, expDateError, cvvError } =
         checkoutInstance?.validate?.(true) ?? {};
 
       isSdkValid = validateSdk(cardNumberError || expDateError || cvvError);
     }
 
-    return (
-      isFirstNameValid &&
-      isLastNameValid &&
-      isEmailValid &&
-      isCardNameValid &&
-      isSdkValid
-    );
+    return isFirstNameValid && isLastNameValid && isEmailValid && isSdkValid;
   }
 
   async function submitSelectedPayment({
     usingSavedCard,
     base64Checksum,
     base64Json,
-    cardHolderName,
   }: {
     usingSavedCard: boolean;
     base64Json: string;
     base64Checksum: string;
-    cardHolderName?: string;
   }) {
     if (usingSavedCard) {
       await savedCardsInstance?.submitPayment?.({ base64Json, base64Checksum });
@@ -116,7 +96,6 @@ export function Checkout(): JSX.Element {
       await checkoutInstance?.submitPayment?.({
         base64Json,
         base64Checksum,
-        cardHolderName,
       });
     }
   }
@@ -143,7 +122,6 @@ export function Checkout(): JSX.Element {
         usingSavedCard: Boolean(data.cardId),
         base64Json: result.payload,
         base64Checksum: result.checksum,
-        cardHolderName: data.cardName,
       });
     } catch (err) {
       console.error("❌ Payment submission failed:", err);
@@ -151,11 +129,6 @@ export function Checkout(): JSX.Element {
       setIsSubmitting(false);
     }
   };
-
-  onCleanup(() => {
-    savedCardsInstance?.destroy?.();
-    checkoutInstance?.destroy?.();
-  });
 
   return (
     <div class="v-classic">
@@ -195,28 +168,9 @@ export function Checkout(): JSX.Element {
 
           {showOtherCard() && !formData().cardId && (
             <>
-              <label>
-                <span class="label-text">Cardholder Name</span>
-                <input
-                  type="text"
-                  id="cardName"
-                  name="cardName"
-                  placeholder="Cardholder Name"
-                  value={formData().cardName}
-                  onInput={(e) =>
-                    setFormData({
-                      ...formData(),
-                      cardName: (e.target as HTMLInputElement).value,
-                    })
-                  }
-                />
-                <span class="error-text">{errors().cardName}</span>
-              </label>
-
               <XMoneyCheckoutWidget
                 sdkError={sdkError()}
                 setSdkError={setSdkError}
-                setIsLoading={setIsLoading}
                 checkoutInstanceRef={(instance: any) => {
                   checkoutInstance = instance;
                 }}

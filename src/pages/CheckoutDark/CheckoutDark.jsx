@@ -4,7 +4,7 @@ import "./CheckoutDark.css";
 
 function CheckoutDark() {
   let xMoneyCheckout;
-  let xMoneyPublicKey = 'pk_test_8389';
+  let xMoneyPublicKey = "pk_test_8389";
   const [formData, setFormData] = createSignal({
     firstName: "",
     lastName: "",
@@ -68,8 +68,8 @@ function CheckoutDark() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            ...formData(), 
+          body: JSON.stringify({
+            ...formData(),
             amount: 1,
             currency: "EUR",
             publicKey: xMoneyPublicKey,
@@ -92,7 +92,7 @@ function CheckoutDark() {
 
   onMount(() => {
     xMoneyCheckout = new XMoneyCheckout({
-      publicKey: "pk_test_1234567890",
+      publicKey: "pk_dev_1234567890",
       container: "xMoney-checkout-dark",
       elementsOptions: { appearance: darkModeStyles },
       onError: (err) => console.error("❌ Payment error", err),

@@ -1,6 +1,7 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { classicCheckoutStyles } from "../../example/styles/index";
+import { customThemeStyles } from "../../example/styles/index";
+import { PUBLIC_KEY } from "../../constants";
 
 declare global {
   interface Window {
@@ -11,7 +12,6 @@ declare global {
 interface XMoneyCheckoutWidgetProps {
   sdkError: string;
   setSdkError: (msg: string) => void;
-  setIsLoading: (loading: boolean) => void;
   checkoutInstanceRef: (instance: any) => void;
 }
 
@@ -28,7 +28,8 @@ export function XMoneyCheckoutWidget(
 
     checkoutInstance = new window.XMoneyCheckout({
       container: "payment-widget",
-      elementsOptions: { appearance: classicCheckoutStyles },
+      publicKey: PUBLIC_KEY,
+      elementsOptions: { appearance: customThemeStyles },
       onError: (err: any) => console.error("❌ Payment error", err),
       onReady: () => setIsReady(true),
     });

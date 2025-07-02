@@ -81,7 +81,6 @@
     align-items: center;
   }
 
-  /* Additional media query for responsiveness */
   @media (max-width: 768px) {
     .checkout-container {
       padding: 10px;

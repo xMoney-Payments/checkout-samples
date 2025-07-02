@@ -2,7 +2,7 @@ import { createSignal, onCleanup, onMount } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import "./Payments.css";
 import { createPaymentIntent } from "../../api";
-import { PaymentForm } from "../../components/EmbededComponents/PaymentForm";
+import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
 
 declare global {
   interface Window {
@@ -28,15 +28,14 @@ export function Payments(): JSX.Element {
 
   const [isLoading, setIsLoading] = createSignal(true);
   const [formData, setFormData] = createSignal<FormData>({
-    firstName: "Danut",
-    lastName: "Ilie",
-    email: "danut.ilie@xmoney.com",
-    cardName: "Danut Ilie",
+    firstName: "customer_firstName",
+    lastName: "customer_lastName",
+    email: "customer.email@xmoney.com",
+    cardName: "customer_cardName",
     cardId: "",
     saveCard: false,
   });
 
-  const [sdkError, setSdkError] = createSignal<string>("");
   const [savedCards, setSavedCards] = createSignal<any[]>([]);
   const [result, setResult] = createSignal<any>(null);
 
@@ -72,14 +71,10 @@ export function Payments(): JSX.Element {
   });
 
   return (
-    <div class="v-classic">
+    <div class="v-payments">
       <div class={`checkout-container`}>
-        <h2>Payments</h2>
         {!isLoading() && (
           <PaymentForm
-            sdkError={sdkError()}
-            setSdkError={setSdkError}
-            setIsLoading={setIsLoading}
             paymentFormInstanceRef={(instance: any) => {
               paymentFormInstance = instance;
             }}

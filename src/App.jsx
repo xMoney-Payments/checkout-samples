@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "solid-js";
 import { Route, Router } from "@solidjs/router";
 import Layout from "./components/Layout";
-import { Checkout } from "./pages/Checkout/Checkout";
+import Checkout from "./pages/Checkout/Checkout";
 import CheckoutLight from "./pages/CheckoutLight/CheckoutLight";
 import CheckoutDark from "./pages/CheckoutDark/CheckoutDark";
 import TransactionResult from "./pages/TransactionResult/TransactionResult";
