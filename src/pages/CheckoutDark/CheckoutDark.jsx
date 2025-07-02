@@ -1,10 +1,11 @@
 import { createSignal, onMount } from "solid-js";
 import { darkModeStyles } from "../../example/styles/index";
 import "./CheckoutDark.css";
+import { PUBLIC_KEY } from "../../constants";
 
 function CheckoutDark() {
   let xMoneyCheckout;
-  let xMoneyPublicKey = "pk_test_8389";
+
   const [formData, setFormData] = createSignal({
     firstName: "",
     lastName: "",
@@ -72,7 +73,7 @@ function CheckoutDark() {
             ...formData(),
             amount: 1,
             currency: "EUR",
-            publicKey: xMoneyPublicKey,
+            publicKey: PUBLIC_KEY,
           }),
         }
       );
@@ -92,7 +93,7 @@ function CheckoutDark() {
 
   onMount(() => {
     xMoneyCheckout = new XMoneyCheckout({
-      publicKey: "pk_dev_1234567890",
+      publicKey: PUBLIC_KEY,
       container: "xMoney-checkout-dark",
       elementsOptions: { appearance: darkModeStyles },
       onError: (err) => console.error("❌ Payment error", err),

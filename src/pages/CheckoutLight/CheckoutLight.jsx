@@ -1,9 +1,9 @@
 import { createSignal, onMount } from "solid-js";
 import "./CheckoutLight.css";
+import { PUBLIC_KEY } from "../../constants";
 
 function CheckoutLight() {
   let xMoneyCheckout;
-  let xMoneyPublicKey = "pk_dev_8389";
   const [isLoading, setIsLoading] = createSignal(true);
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [formData, setFormData] = createSignal({
@@ -52,7 +52,7 @@ function CheckoutLight() {
             ...formData(),
             amount: 1,
             currency: "EUR",
-            publicKey: xMoneyPublicKey,
+            publicKey: PUBLIC_KEY,
           }),
         }
       );

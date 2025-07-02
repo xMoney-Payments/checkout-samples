@@ -3,6 +3,7 @@ import { JSX } from "solid-js/jsx-runtime";
 import "./Payments.css";
 import { createPaymentIntent } from "../../api";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
+import { API_BASE, PUBLIC_KEY, USER_ID } from "../../constants";
 
 declare global {
   interface Window {
@@ -18,10 +19,6 @@ interface FormData {
   cardId: string;
   saveCard: boolean;
 }
-
-const API_BASE = "http://localhost:3001";
-const USER_ID = 61433;
-const PUBLIC_KEY = "pk_test_8389";
 
 export function Payments(): JSX.Element {
   let paymentFormInstance: any;
