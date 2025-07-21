@@ -81,8 +81,8 @@ function CheckoutDark() {
       if (!response.ok)
         throw new Error(result.error || "Failed to create payment intent");
       await xMoneyCheckout.submitPayment({
-        base64Json: result.payload,
-        base64Checksum: result.checksum,
+        payload: result.payload,
+        checksum: result.checksum,
       });
     } catch (error) {
       console.error("Error creating payment intent:", error);

@@ -60,8 +60,8 @@ function CheckoutLight() {
       if (!response.ok)
         throw new Error(result.error || "Failed to create payment intent");
       await xMoneyCheckout.submitPayment({
-        base64Json: result.payload,
-        base64Checksum: result.checksum,
+        payload: result.payload,
+        checksum: result.checksum,
       });
     } catch (error) {
       console.error("Error creating payment intent:", error);
@@ -73,7 +73,7 @@ function CheckoutLight() {
   onMount(() => {
     xMoneyCheckout = new XMoneyCheckout({
       container: "xMoney-checkout-light",
-      publicKey: xMoneyPublicKey,
+      publicKey: PUBLIC_KEY,
       onError: (err) => console.error("❌ Payment error", err),
       onReady: () => setIsLoading(false),
     });

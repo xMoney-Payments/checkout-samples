@@ -1,5 +1,5 @@
 import { createSignal, onMount, onCleanup } from "solid-js";
-import { customThemeStyles } from "../../example/styles";
+import { customThemeStylesGreen } from "../../example/styles";
 
 interface Card {
   id: string;
@@ -31,7 +31,7 @@ export function SavedCards(props: SavedCardsProps) {
       savedCards: savedCards.data,
       container: "saved-cards",
       publicKey: props.publicKey,
-      elementsOptions: { appearance: customThemeStyles },
+      elementsOptions: { appearance: customThemeStylesGreen },
       onError: (err: any) => console.error("❌ Saved cards error", err),
       onReady: () => setIsReady(true),
       onCardSelect: props.onCardSelect,

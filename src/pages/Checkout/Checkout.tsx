@@ -83,19 +83,19 @@ export default function Checkout(): JSX.Element {
 
   async function submitSelectedPayment({
     usingSavedCard,
-    base64Checksum,
-    base64Json,
+    payload,
+    checksum,
   }: {
     usingSavedCard: boolean;
-    base64Json: string;
-    base64Checksum: string;
+    payload: string;
+    checksum: string;
   }) {
     if (usingSavedCard) {
-      await savedCardsInstance?.submitPayment?.({ base64Json, base64Checksum });
+      await savedCardsInstance?.submitPayment?.({ payload, checksum });
     } else {
       await checkoutInstance?.submitPayment?.({
-        base64Json,
-        base64Checksum,
+        payload,
+        checksum,
       });
     }
   }
@@ -120,8 +120,8 @@ export default function Checkout(): JSX.Element {
 
       await submitSelectedPayment({
         usingSavedCard: Boolean(data.cardId),
-        base64Json: result.payload,
-        base64Checksum: result.checksum,
+        payload: result.payload,
+        checksum: result.checksum,
       });
     } catch (err) {
       console.error("❌ Payment submission failed:", err);
