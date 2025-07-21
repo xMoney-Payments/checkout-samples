@@ -171,6 +171,9 @@ export function Payments(): JSX.Element {
               }}
               savedCards={savedCards()}
               result={result()}
+              onClose={() => {
+                document.querySelector(".checkout-header")?.remove();
+              }}
             />
           )}
         </div>

@@ -19,6 +19,7 @@ interface PaymentFormProps {
   paymentFormInstanceRef: (instance: XMoneyPaymentFormInstance | null) => void;
   savedCards: ICard[];
   result: { payload: string; checksum: string } | null;
+  onClose: () => void;
 }
 
 export function PaymentForm(props: PaymentFormProps): JSX.Element {
@@ -49,11 +50,18 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
           const resultContainer = document.getElementById("result-container");
           clearInterval(intervalId);
           paymentFormInstance?.close();
+          props.onClose();
           if (!resultContainer) return;
           resultContainer.innerHTML = `
             <div class="order-complete">
               Order ${data.data.orderStatus}!
               <pre><code>${JSON.stringify(data.data, null, 2)}</code></pre>
+              <button
+                style="margin-top: 16px; padding: 8px 16px; border-radius: 4px; background: #0078d4; color: white; border: none; cursor: pointer;"
+                onclick="window.location.reload()"
+              >
+                Try another transaction
+              </button>
             </div>
             `;
           props.paymentFormInstanceRef?.(null);
