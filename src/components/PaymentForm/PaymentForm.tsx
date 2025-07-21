@@ -46,9 +46,9 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         const response = await fetch(`${API_BASE}/order/${orderId}`);
         if (!response.ok) throw new Error("Failed to fetch order");
         const data = await response.json();
-        if (data.data.orderStatus?.includes("complete")) {
+        if (data?.data?.orderStatus?.includes("complete")) {
           const resultContainer = document.getElementById("result-container");
-          clearInterval(intervalId);
+          intervalId && clearInterval(intervalId);
           paymentFormInstance?.close();
           props.onClose();
           if (!resultContainer) return;
