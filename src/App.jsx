@@ -8,7 +8,7 @@ import TransactionResult from "./pages/TransactionResult/TransactionResult";
 import { Payments } from "./pages/Payments/Payments";
 
 const routes = [
-  { path: "/", component: Checkout },
+  { path: "/", component: Payments },
   { path: "/v-light", component: CheckoutLight },
   { path: "/v-dark", component: CheckoutDark },
   { path: "/transaction-result", component: TransactionResult },

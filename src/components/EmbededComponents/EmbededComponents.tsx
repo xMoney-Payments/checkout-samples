@@ -1,6 +1,6 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { customThemeStyles } from "../../example/styles/index";
+import { customThemeStylesGreen } from "../../example/styles/index";
 import { PUBLIC_KEY } from "../../constants";
 
 declare global {
@@ -29,7 +29,7 @@ export function XMoneyCheckoutWidget(
     checkoutInstance = new window.XMoneyCheckout({
       container: "payment-widget",
       publicKey: PUBLIC_KEY,
-      elementsOptions: { appearance: customThemeStyles },
+      elementsOptions: { appearance: customThemeStylesGreen },
       onError: (err: any) => console.error("❌ Payment error", err),
       onReady: () => setIsReady(true),
     });

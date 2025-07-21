@@ -4,7 +4,7 @@ export interface InitializeCheckoutModel {
   email: string;
   cardName?: string;
   cardId?: string;
-  saveCard: boolean;
+  saveCard?: boolean;
   amount: number;
   currency: string;
   publicKey: string;
