@@ -1,13 +1,13 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { lightThemeStyles } from "../../example/styles/index";
-import { PUBLIC_KEY, API_BASE } from "../../constants";
-import { createEffect } from "solid-js";
+import { PUBLIC_KEY, USER_ID } from "../../constants";
 import {
-  ICard,
   XMoneyPaymentForm,
   XMoneyPaymentFormInstance,
+  XMoneyPaymentFormConfig,
 } from "./payment-form.types";
+import { TransactionResult } from "../TransactionResult/TransactionResult";
 
 declare global {
   interface Window {
@@ -16,8 +16,9 @@ declare global {
 }
 
 interface PaymentFormProps {
+  config?: XMoneyPaymentFormConfig;
   paymentFormInstanceRef: (instance: XMoneyPaymentFormInstance | null) => void;
-  savedCards: ICard[];
+  sessionToken: string;
   result: { payload: string; checksum: string } | null;
   onClose: () => void;
 }
@@ -25,59 +26,9 @@ interface PaymentFormProps {
 export function PaymentForm(props: PaymentFormProps): JSX.Element {
   let paymentFormInstance: XMoneyPaymentFormInstance | undefined;
   const [isReady, setIsReady] = createSignal(false);
+  const [transactionResult, setTransactionResult] = createSignal<any>(null);
 
   let intervalId: number | undefined;
-
-  createEffect(() => {
-    const base64Json = props.result?.payload;
-    if (!base64Json) return;
-    let orderId: string | undefined;
-    try {
-      const decodedJson = JSON.parse(atob(base64Json));
-      orderId = decodedJson.order.orderId;
-    } catch (e) {
-      console.error("Failed to decode base64 JSON or parse orderId", e);
-      return;
-    }
-    if (!orderId) return;
-
-    const fetchOrder = async () => {
-      try {
-        const response = await fetch(`${API_BASE}/order/${orderId}`);
-        if (!response.ok) throw new Error("Failed to fetch order");
-        const data = await response.json();
-        if (data?.data?.orderStatus?.includes("complete")) {
-          const resultContainer = document.getElementById("result-container");
-          intervalId && clearInterval(intervalId);
-          paymentFormInstance?.close();
-          props.onClose();
-          if (!resultContainer) return;
-          resultContainer.innerHTML = `
-            <div class="order-complete">
-              Order ${data.data.orderStatus}!
-              <pre><code>${JSON.stringify(data.data, null, 2)}</code></pre>
-              <button
-                style="margin-top: 16px; padding: 8px 16px; border-radius: 4px; background: #0078d4; color: white; border: none; cursor: pointer;"
-                onclick="window.location.reload()"
-              >
-                Try another transaction
-              </button>
-            </div>
-            `;
-          props.paymentFormInstanceRef?.(null);
-        }
-      } catch (err) {
-        console.error("Error fetching order:", err);
-      }
-    };
-
-    fetchOrder();
-    intervalId = window.setInterval(fetchOrder, 6000);
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  });
 
   onMount(async () => {
     if (props.result === null) {
@@ -85,21 +36,37 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       return;
     }
 
-    paymentFormInstance = new window.XMoneyPaymentForm({
-      container: "payment-form-widget",
-      elementsOptions: {
-        appearance: lightThemeStyles,
-        validationMode: "onChange",
-        locale: "en-US",
-        saveCardOption: true,
-      },
-      savedCards: props.savedCards,
-      checksum: props.result.checksum,
-      payload: props.result.payload,
-      publicKey: PUBLIC_KEY,
-      onReady: () => setIsReady(true),
-      onError: (err: any) => console.error("❌ Payment error", err),
-    });
+    paymentFormInstance = new window.XMoneyPaymentForm(
+      props.config
+        ? {
+            ...props.config,
+            onReady: () => setIsReady(true),
+            onError: (err: any) => console.error("❌ Payment error", err),
+            onPaymentComplete: (result: any) => {
+              setTransactionResult(result);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            },
+          }
+        : {
+            container: "payment-form-widget",
+            options: {
+              appearance: lightThemeStyles,
+              enableBackgroundRefresh: true,
+              displayCardHolderName: true,
+            },
+            checksum: props.result.checksum,
+            payload: props.result.payload,
+            publicKey: PUBLIC_KEY,
+            sessionToken: props.sessionToken,
+            userId: USER_ID,
+            onReady: () => setIsReady(true),
+            onError: (err: any) => console.error("❌ Payment error", err),
+            onPaymentComplete: (result: any) => {
+              setTransactionResult(result);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            },
+          }
+    );
 
     props.paymentFormInstanceRef(paymentFormInstance);
   });
@@ -125,7 +92,12 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       )}
 
       <div id="payment-form-widget" style={{ opacity: isReady() ? 1 : 0 }} />
-      <div id="result-container"></div>
+      {transactionResult() && (
+        <TransactionResult
+          result={transactionResult()}
+          onRetry={() => window.location.reload()}
+        />
+      )}
     </div>
   );
 }

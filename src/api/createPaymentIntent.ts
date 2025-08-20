@@ -1,5 +1,3 @@
-// src/api/payment.ts
-
 import { InitializeCheckoutModel } from "../types/checkout.types";
 
 export interface PaymentIntentResponse {

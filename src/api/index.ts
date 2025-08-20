@@ -1,2 +1,2 @@
-export * from "./fetchSavedCards";
+export * from "./getSessionToken";
 export * from "./createPaymentIntent";

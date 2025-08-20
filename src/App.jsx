@@ -1,18 +1,14 @@
 import { Suspense, lazy } from "solid-js";
 import { Route, Router } from "@solidjs/router";
 import Layout from "./components/Layout";
-import Checkout from "./pages/Checkout/Checkout";
-import CheckoutLight from "./pages/CheckoutLight/CheckoutLight";
-import CheckoutDark from "./pages/CheckoutDark/CheckoutDark";
 import TransactionResult from "./pages/TransactionResult/TransactionResult";
 import { Payments } from "./pages/Payments/Payments";
+import { DebugPaymentForm } from "./pages/Debug/Debug";
 
 const routes = [
   { path: "/", component: Payments },
-  { path: "/v-light", component: CheckoutLight },
-  { path: "/v-dark", component: CheckoutDark },
+  { path: "/debug", component: DebugPaymentForm },
   { path: "/transaction-result", component: TransactionResult },
-  { path: "/payments", component: Payments },
 ];
 
 export const App = () => {
