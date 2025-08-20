@@ -6,7 +6,7 @@ import { createPaymentIntent, getSessionToken } from "../../api";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
 import { XMoneyPaymentFormInstance } from "../../components/PaymentForm/payment-form.types";
 
-import { API_BASE, CURRENCY, PUBLIC_KEY } from "../../constants";
+import { CURRENCY, PUBLIC_KEY } from "../../constants";
 
 import {
   darkThemeStyles,
@@ -52,7 +52,7 @@ export function Payments(): JSX.Element {
       publicKey: PUBLIC_KEY,
     };
 
-    const intentResult = await createPaymentIntent(API_BASE, paymentParams);
+    const intentResult = await createPaymentIntent(paymentParams);
 
     setSessionToken(response.data.token);
     setResult(intentResult);
@@ -92,7 +92,7 @@ export function Payments(): JSX.Element {
         publicKey: PUBLIC_KEY,
       };
 
-      const intent = await createPaymentIntent(API_BASE, paymentParams);
+      const intent = await createPaymentIntent(paymentParams);
       paymentFormInstance?.updateOrder(intent.payload, intent.checksum);
       setResult(intent);
 

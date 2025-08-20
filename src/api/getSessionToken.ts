@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:3001";
+import { API_BASE } from "../constants";
+
 export const getSessionToken = async () => {
   try {
     const res = await fetch(`${API_BASE}/session-token`);

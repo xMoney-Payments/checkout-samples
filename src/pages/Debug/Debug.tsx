@@ -2,12 +2,7 @@ import { createSignal, onMount, Show } from "solid-js";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
 import { XMoneyPaymentFormConfig } from "../../components/PaymentForm/payment-form.types";
 import { createPaymentIntent, getSessionToken } from "../../api";
-import {
-  API_BASE,
-  CURRENCY,
-  INITIAL_FORM_DATA,
-  PUBLIC_KEY,
-} from "../../constants";
+import { CURRENCY, INITIAL_FORM_DATA, PUBLIC_KEY } from "../../constants";
 
 import "./Debug.css";
 import { Theme } from "../Payments/payments.types";
@@ -45,7 +40,7 @@ export function DebugPaymentForm() {
       publicKey: PUBLIC_KEY,
     };
 
-    const intentResult = await createPaymentIntent(API_BASE, paymentParams);
+    const intentResult = await createPaymentIntent(paymentParams);
 
     setConfig((prev) => ({
       ...prev,
