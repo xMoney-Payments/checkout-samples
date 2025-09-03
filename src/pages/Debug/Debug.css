@@ -1,0 +1,108 @@
+.debug-payment-form {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.debug-payment-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.config-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  gap: 0.25rem;
+  color: #444;
+}
+
+.config-form input[type="number"],
+.config-form select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+label {
+  &.validation-mode {
+    display: flex;
+    align-items: normal;
+    gap: 0.5rem;
+    flex-direction: column !important;
+    margin-top: 8px;
+  }
+}
+
+fieldset {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+}
+
+fieldset legend {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row !important;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background: #4a90e2;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #357ac9;
+}
+
+button.secondary {
+  background: #ccc;
+  color: #333;
+}
+
+button.secondary:hover {
+  background: #bbb;
+}
+
+.form-container {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border-radius: 6px;
+  background: #fff;
+}

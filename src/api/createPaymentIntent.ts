@@ -1,5 +1,4 @@
-// src/api/payment.ts
-
+import { API_BASE } from "../constants";
 import { InitializeCheckoutModel } from "../types/checkout.types";
 
 export interface PaymentIntentResponse {
@@ -9,10 +8,9 @@ export interface PaymentIntentResponse {
 }
 
 export async function createPaymentIntent(
-  apiBase: string,
   data: InitializeCheckoutModel
 ): Promise<PaymentIntentResponse> {
-  const response = await fetch(`${apiBase}/checkout-initialization`, {
+  const response = await fetch(`${API_BASE}/checkout-initialization`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

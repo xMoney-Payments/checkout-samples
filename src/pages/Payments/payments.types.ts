@@ -10,6 +10,5 @@ export interface FormData {
   firstName: string;
   lastName: string;
   email: string;
-  cardName: string;
   cardId: string;
 }

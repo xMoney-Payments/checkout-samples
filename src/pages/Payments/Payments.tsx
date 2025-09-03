@@ -2,14 +2,11 @@ import { createSignal, onCleanup, onMount } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import "./Payments.css";
 
-import { createPaymentIntent, fetchSavedCards } from "../../api";
+import { createPaymentIntent, getSessionToken } from "../../api";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
-import {
-  ICard,
-  XMoneyPaymentFormInstance,
-} from "../../components/PaymentForm/payment-form.types";
+import { XMoneyPaymentFormInstance } from "../../components/PaymentForm/payment-form.types";
 
-import { API_BASE, CURRENCY, PUBLIC_KEY, USER_ID } from "../../constants";
+import { CURRENCY, PUBLIC_KEY } from "../../constants";
 
 import {
   darkThemeStyles,
@@ -24,7 +21,6 @@ const initialFormData: FormData = {
   firstName: "customer_firstName",
   lastName: "customer_lastName",
   email: "customer.email@xmoney.com",
-  cardName: "customer_cardName",
   cardId: "",
 };
 
@@ -36,7 +32,7 @@ export function Payments(): JSX.Element {
   const [formData, setFormData] = createSignal<FormData>(initialFormData);
   const [locale, setLocale] = createSignal<Locale>("en-US");
   const [theme, setTheme] = createSignal<Theme>("light");
-  const [savedCards, setSavedCards] = createSignal<ICard[]>([]);
+  const [sessionToken, setSessionToken] = createSignal<string>("");
   const [result, setResult] = createSignal<{
     payload: string;
     checksum: string;
@@ -46,7 +42,7 @@ export function Payments(): JSX.Element {
   let debounceTimeout: number | null = null;
 
   onMount(async () => {
-    const cards = await fetchSavedCards(USER_ID);
+    const response = await getSessionToken();
 
     const paymentParams = {
       ...formData(),
@@ -55,9 +51,9 @@ export function Payments(): JSX.Element {
       publicKey: PUBLIC_KEY,
     };
 
-    const intentResult = await createPaymentIntent(API_BASE, paymentParams);
+    const intentResult = await createPaymentIntent(paymentParams);
 
-    setSavedCards(cards.data);
+    setSessionToken(response.data.token);
     setResult(intentResult);
     setIsLoading(false);
   });
@@ -65,7 +61,7 @@ export function Payments(): JSX.Element {
   onCleanup(() => {
     paymentFormInstance?.destroy?.();
     setFormData(initialFormData);
-    setSavedCards([]);
+    setSessionToken("");
     setResult(null);
     paymentFormInstance = null;
   });
@@ -95,7 +91,7 @@ export function Payments(): JSX.Element {
         publicKey: PUBLIC_KEY,
       };
 
-      const intent = await createPaymentIntent(API_BASE, paymentParams);
+      const intent = await createPaymentIntent(paymentParams);
       paymentFormInstance?.updateOrder(intent.payload, intent.checksum);
       setResult(intent);
 
@@ -169,7 +165,7 @@ export function Payments(): JSX.Element {
               paymentFormInstanceRef={(instance) => {
                 paymentFormInstance = instance;
               }}
-              savedCards={savedCards()}
+              sessionToken={sessionToken()}
               result={result()}
               onClose={() => {
                 document.querySelector(".checkout-header")?.remove();
