@@ -7,7 +7,6 @@ export const INITIAL_FORM_DATA = {
   firstName: "customer_firstName",
   lastName: "customer_lastName",
   email: "customer.email@xmoney.com",
-  cardName: "customer_cardName",
   cardId: "",
   amount: 30,
 };

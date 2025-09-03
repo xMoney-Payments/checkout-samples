@@ -21,7 +21,6 @@ const initialFormData: FormData = {
   firstName: "customer_firstName",
   lastName: "customer_lastName",
   email: "customer.email@xmoney.com",
-  cardName: "customer_cardName",
   cardId: "",
 };
 
