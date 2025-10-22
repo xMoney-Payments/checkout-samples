@@ -53,7 +53,7 @@ export function Payments(): JSX.Element {
 
     const intentResult = await createPaymentIntent(paymentParams);
 
-    setSessionToken(response.data.token);
+    setSessionToken(response.data?.token);
     setResult(intentResult);
     setIsLoading(false);
   });

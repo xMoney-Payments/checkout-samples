@@ -8,6 +8,7 @@ import {
   XMoneyPaymentFormConfig,
 } from "./payment-form.types";
 import { TransactionResult } from "../TransactionResult/TransactionResult";
+import { MatchStatusEnum } from "../../types/checkout.types";
 
 declare global {
   interface Window {
@@ -53,6 +54,19 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
               appearance: lightThemeStyles,
               enableBackgroundRefresh: true,
               displayCardHolderName: true,
+              cardOwnerVerification: {
+                name: {
+                  firstName: "customer_firstName",
+                  middleName: "customer_middleName",
+                  lastName: "customer_lastName",
+                },
+                ownerVerificationCallback: (matchResult: MatchStatusEnum) => {
+                  return (
+                    matchResult === MatchStatusEnum.Matched ||
+                    matchResult === MatchStatusEnum.PartiallyMatched
+                  );
+                },
+              },
             },
             checksum: props.result.checksum,
             payload: props.result.payload,

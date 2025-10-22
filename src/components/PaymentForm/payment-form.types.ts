@@ -1,3 +1,5 @@
+import { MatchStatusEnum, OrderResponse } from "../../types/checkout.types";
+
 /**
  * Configuration options for initializing and customizing the XMoney payment form.
  */
@@ -125,6 +127,23 @@ export interface XMoneyPaymentFormConfig {
      * @defaultValue `false`
      */
     displayCardHolderName?: boolean;
+    /**
+     * Card owner verification options.
+     */
+    cardOwnerVerification?: {
+      /**
+       * Name information for card owner verification.
+       */
+      name: {
+        firstName: string;
+        middleName: string;
+        lastName: string;
+      };
+      /**
+       * Callback function for owner verification.
+       */
+      ownerVerificationCallback: (matchResult: MatchStatusEnum) => boolean;
+    };
   };
 
   /**
@@ -137,7 +156,7 @@ export interface XMoneyPaymentFormConfig {
    *
    * @param err - The error object or message.
    */
-  onError?: (err: unknown) => void;
+  onError?: (err: { code: number; message: string } | string) => void;
 
   /**
    * Callback executed when the payment is completed.
@@ -147,7 +166,7 @@ export interface XMoneyPaymentFormConfig {
    * @remarks
    * This callback will **not** be triggered if `enableBackgroundRefresh` is `false`.
    */
-  onPaymentComplete?: (data: unknown) => void;
+  onPaymentComplete?: (data: OrderResponse) => void;
 }
 
 /**
