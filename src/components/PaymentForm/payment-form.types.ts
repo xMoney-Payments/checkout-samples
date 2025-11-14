@@ -122,11 +122,11 @@ export interface XMoneyPaymentFormConfig {
     displaySaveCardOption?: boolean;
 
     /**
-     * Displays a cardholder name field in the form.
+     * Displays the submit button in the form.
      *
-     * @defaultValue `false`
+     * @defaultValue `true`
      */
-    displayCardHolderName?: boolean;
+    displaySubmitButton?: boolean;
     /**
      * Card owner verification options.
      */
@@ -144,12 +144,44 @@ export interface XMoneyPaymentFormConfig {
        */
       ownerVerificationCallback: (matchResult: MatchStatusEnum) => boolean;
     };
+    googlePay?: {
+      /**
+       * Enables Google Pay as a payment option.
+       *
+       * @defaultValue `false`
+       */
+      enabled?: boolean;
+      appearance?: {
+        color?: "white" | "black" | "default";
+        radius?: number;
+        borderType?: "default_border" | "no_border";
+      };
+    };
+    applePay?: {
+      /**
+       * Enables Apple Pay as a payment option.
+       *
+       * @defaultValue `false`
+       */
+      enabled?: boolean;
+      appearance?: {
+        style?: "white" | "black" | "white_outline";
+        radius?: number;
+      };
+    };
   };
 
   /**
    * Callback executed when the payment form is fully initialized and ready.
    */
   onReady?: () => void;
+
+  /**
+   * Callback executed when the form submission state changes.
+   *
+   * @param isPending - `true` if the form is submitting, `false` otherwise.
+   */
+  onSubmitPending?: (isPending: boolean) => void;
 
   /**
    * Callback executed when an error occurs within the payment form.
@@ -198,6 +230,11 @@ export interface XMoneyPaymentFormInstance {
     variables?: Record<string, string>;
     rules?: Record<string, Record<string, string>>;
   }) => void;
+
+  /**
+   * Submits the payment form.
+   */
+  submit: () => void;
 
   /**
    * Closes the payment form.
