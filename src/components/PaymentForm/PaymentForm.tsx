@@ -28,7 +28,6 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
   let paymentFormInstance: XMoneyPaymentFormInstance | undefined;
   const [isReady, setIsReady] = createSignal(false);
   const [transactionResult, setTransactionResult] = createSignal<any>(null);
-  const [isSubmitting, setIsSubmitting] = createSignal(false);
 
   let intervalId: number | undefined;
 
@@ -54,7 +53,6 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             options: {
               appearance: lightThemeStyles,
               enableBackgroundRefresh: true,
-              displaySubmitButton: false,
               cardOwnerVerification: {
                 name: {
                   firstName: "customer_firstName",
@@ -70,18 +68,9 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
               },
               googlePay: {
                 enabled: true,
-                appearance: {
-                  color: "default",
-                  radius: 12,
-                  borderType: "default_border",
-                },
               },
               applePay: {
                 enabled: true,
-                appearance: {
-                  style: "black",
-                  radius: 8,
-                },
               },
             },
             checksum: props.result.checksum,
@@ -89,11 +78,8 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             publicKey: PUBLIC_KEY,
             sessionToken: props.sessionToken,
             userId: USER_ID,
-            onSubmitPending: (isPending: boolean) => {
-              setIsSubmitting(isPending);
-            },
             onReady: () => setIsReady(true),
-            onError: (err: any) => console.error("❌ Payment error", err),
+            onError: (err) => console.error("❌ Payment error", err),
             onPaymentComplete: (result: any) => {
               setTransactionResult(result);
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -125,15 +111,6 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       )}
 
       <div id="payment-form-widget" style={{ opacity: isReady() ? 1 : 0 }} />
-      <button
-        class="close-button"
-        onClick={() => {
-          paymentFormInstance?.submit();
-        }}
-        disabled={!isReady() || isSubmitting()}
-      >
-        {isSubmitting() ? "Submitting..." : "Submit Payment"}
-      </button>
       {transactionResult() && (
         <TransactionResult
           result={transactionResult()}

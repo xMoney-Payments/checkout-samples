@@ -154,6 +154,15 @@ export interface XMoneyPaymentFormConfig {
       appearance?: {
         color?: "white" | "black" | "default";
         radius?: number;
+        type?:
+          | "book"
+          | "buy"
+          | "checkout"
+          | "donate"
+          | "order"
+          | "plain"
+          | "pay"
+          | "subscribe";
         borderType?: "default_border" | "no_border";
       };
     };
@@ -165,8 +174,26 @@ export interface XMoneyPaymentFormConfig {
        */
       enabled?: boolean;
       appearance?: {
-        style?: "white" | "black" | "white_outline";
+        style?: "white" | "black" | "white-outline";
         radius?: number;
+        type?:
+          | "add-money"
+          | "book"
+          | "buy"
+          | "checkout"
+          | "contribute"
+          | "continue"
+          | "donate"
+          | "order"
+          | "plain"
+          | "pay"
+          | "reload"
+          | "rent"
+          | "set-up"
+          | "subscribe"
+          | "support"
+          | "tip"
+          | "top-up";
       };
     };
   };
