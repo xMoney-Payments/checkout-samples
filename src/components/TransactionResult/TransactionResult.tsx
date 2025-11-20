@@ -1,15 +1,16 @@
 import { createSignal } from "solid-js";
 import "./TransactionResult.css";
+import { TransactionDetails } from "../../types/checkout.types";
 
 interface TransactionResultProps {
-  result: any;
+  result: TransactionDetails;
   onRetry: () => void;
 }
 
 export function TransactionResult(props: TransactionResultProps) {
   const [showRaw, setShowRaw] = createSignal(false);
   const { result } = props;
-  const isFailed = result.orderStatus?.includes("failed");
+  const isFailed = result.transactionStatus?.includes("failed");
 
   return (
     <div class="transaction-result">
@@ -19,7 +20,13 @@ export function TransactionResult(props: TransactionResultProps) {
 
       <div class="summary-box">
         <p>
-          <strong>Order ID:</strong> {result.externalOrderId}
+          <strong>Transaction ID:</strong> {result.id}
+        </p>
+        <p>
+          <strong>Order ID:</strong> {result.orderId}
+        </p>
+        <p>
+          <strong>Customer ID:</strong> {result.customerId}
         </p>
         <p>
           <strong>Customer:</strong> {result.customerData?.firstName}{" "}
@@ -32,10 +39,7 @@ export function TransactionResult(props: TransactionResultProps) {
           <strong>Amount:</strong> {result.amount} {result.currency}
         </p>
         <p>
-          <strong>Status:</strong> {result.orderStatus}
-        </p>
-        <p>
-          <strong>Date:</strong> {new Date(result.createdAt).toLocaleString()}
+          <strong>Status:</strong> {result.transactionStatus}
         </p>
         <p>
           <strong>Description:</strong> {result.description}

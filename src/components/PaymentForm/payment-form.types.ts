@@ -1,4 +1,7 @@
-import { MatchStatusEnum, OrderResponse } from "../../types/checkout.types";
+import {
+  MatchStatusEnum,
+  TransactionDetails,
+} from "../../types/checkout.types";
 
 /**
  * Configuration options for initializing and customizing the XMoney payment form.
@@ -86,6 +89,14 @@ export interface XMoneyPaymentFormConfig {
       rules?: Record<string, Record<string, string>>;
     };
 
+    buttonType?:
+      | "book"
+      | "buy"
+      | "checkout"
+      | "donate"
+      | "order"
+      | "pay"
+      | "subscribe";
     /**
      * Validation mode for the form.
      *
@@ -225,7 +236,7 @@ export interface XMoneyPaymentFormConfig {
    * @remarks
    * This callback will **not** be triggered if `enableBackgroundRefresh` is `false`.
    */
-  onPaymentComplete?: (data: OrderResponse) => void;
+  onPaymentComplete?: (data: TransactionDetails) => void;
 }
 
 /**
