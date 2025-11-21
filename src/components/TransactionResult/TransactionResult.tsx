@@ -10,7 +10,7 @@ interface TransactionResultProps {
 export function TransactionResult(props: TransactionResultProps) {
   const [showRaw, setShowRaw] = createSignal(false);
   const { result } = props;
-  const isFailed = result.transactionStatus?.includes("failed");
+  const isFailed = result.transactionStatus?.includes("failed") || !result.id;
 
   return (
     <div class="transaction-result">

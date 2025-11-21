@@ -96,7 +96,8 @@ export interface XMoneyPaymentFormConfig {
       | "donate"
       | "order"
       | "pay"
-      | "subscribe";
+      | "subscribe"
+      | "topUp";
     /**
      * Validation mode for the form.
      *

@@ -8,7 +8,10 @@ import {
   XMoneyPaymentFormConfig,
 } from "./payment-form.types";
 import { TransactionResult } from "../TransactionResult/TransactionResult";
-import { MatchStatusEnum } from "../../types/checkout.types";
+import {
+  MatchStatusEnum,
+  TransactionDetails,
+} from "../../types/checkout.types";
 
 declare global {
   interface Window {
@@ -43,7 +46,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             ...props.config,
             onReady: () => setIsReady(true),
             onError: (err: any) => console.error("❌ Payment error", err),
-            onPaymentComplete: (result: any) => {
+            onPaymentComplete: (result: TransactionDetails) => {
               setTransactionResult(result);
               window.scrollTo({ top: 0, behavior: "smooth" });
             },
@@ -51,6 +54,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         : {
             container: "payment-form-widget",
             options: {
+              buttonType: "topUp",
               appearance: lightThemeStyles,
               enableBackgroundRefresh: true,
               cardOwnerVerification: {
@@ -78,9 +82,10 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             publicKey: PUBLIC_KEY,
             sessionToken: props.sessionToken,
             userId: USER_ID,
+
             onReady: () => setIsReady(true),
             onError: (err) => console.error("❌ Payment error", err),
-            onPaymentComplete: (result: any) => {
+            onPaymentComplete: (result: TransactionDetails) => {
               setTransactionResult(result);
               window.scrollTo({ top: 0, behavior: "smooth" });
             },
