@@ -88,7 +88,10 @@ export interface XMoneyPaymentFormConfig {
        */
       rules?: Record<string, Record<string, string>>;
     };
-
+    /**
+     * Type of the button displayed on the payment form.
+     * @defaultValue `"pay"`
+     */
     buttonType?:
       | "book"
       | "buy"
@@ -163,9 +166,25 @@ export interface XMoneyPaymentFormConfig {
        * @defaultValue `false`
        */
       enabled?: boolean;
+      /**
+       * Appearance customization for Google Pay button.
+       */
       appearance?: {
+        /**
+         * Style of the Google Pay button.
+         *
+         * @defaultValue `"default"`
+         */
         color?: "white" | "black" | "default";
+        /**
+         * Corner radius of the Google Pay button.
+         * @defaultValue `12`
+         */
         radius?: number;
+        /**
+         *  Type of the Google Pay button.
+         * @defaultValue `"pay"`
+         */
         type?:
           | "book"
           | "buy"
@@ -175,9 +194,16 @@ export interface XMoneyPaymentFormConfig {
           | "plain"
           | "pay"
           | "subscribe";
+        /**
+         * Border type of the Google Pay button.
+         * @defaultValue `"no_border"`
+         */
         borderType?: "default_border" | "no_border";
       };
     };
+    /**
+     * Appearance customization for Apple Pay button.
+     */
     applePay?: {
       /**
        * Enables Apple Pay as a payment option.
@@ -185,9 +211,24 @@ export interface XMoneyPaymentFormConfig {
        * @defaultValue `false`
        */
       enabled?: boolean;
+      /**
+       * Appearance customization for Apple Pay button.
+       */
       appearance?: {
+        /**
+         * Style of the Apple Pay button.
+         * @defaultValue `"black"`
+         */
         style?: "white" | "black" | "white-outline";
+        /**
+         * Corner radius of the Apple Pay button.
+         * @defaultValue `12`
+         */
         radius?: number;
+        /**
+         * Type of the Apple Pay button.
+         * @defaultValue `"pay"`
+         */
         type?:
           | "add-money"
           | "book"
