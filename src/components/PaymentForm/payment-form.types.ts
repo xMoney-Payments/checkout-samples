@@ -173,9 +173,9 @@ export interface XMoneyPaymentFormConfig {
         /**
          * Style of the Google Pay button.
          *
-         * @defaultValue `"default"`
+         * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
          */
-        color?: "white" | "black" | "default";
+        color?: "white" | "black";
         /**
          * Corner radius of the Google Pay button.
          * @defaultValue `12`
@@ -217,7 +217,7 @@ export interface XMoneyPaymentFormConfig {
       appearance?: {
         /**
          * Style of the Apple Pay button.
-         * @defaultValue `"black"`
+         * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
          */
         style?: "white" | "black" | "white-outline";
         /**
