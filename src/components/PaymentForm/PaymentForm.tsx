@@ -57,19 +57,6 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
               buttonType: "topUp",
               appearance: lightThemeStyles,
               enableBackgroundRefresh: true,
-              cardOwnerVerification: {
-                name: {
-                  firstName: "customer_firstName",
-                  middleName: "customer_middleName",
-                  lastName: "customer_lastName",
-                },
-                ownerVerificationCallback: (matchResult: MatchStatusEnum) => {
-                  return (
-                    matchResult === MatchStatusEnum.Matched ||
-                    matchResult === MatchStatusEnum.PartialMatched
-                  );
-                },
-              },
               googlePay: {
                 enabled: true,
               },
@@ -116,23 +103,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       )}
 
       <div id="payment-form-widget" style={{ opacity: isReady() ? 1 : 0 }} />
-      {isReady() && !transactionResult() && (
-        <button
-          style={{
-            display: "flex",
-            "justify-self": "right",
-            "margin-top": "4px",
-          }}
-          onClick={() => {
-            window.open(
-              `https://pixelatus.ro/test.html?checksum=${props.result?.checksum}&payload=${props.result?.payload}&token=${props.sessionToken}`,
-              "_blank"
-            );
-          }}
-        >
-          Test Apple Pay
-        </button>
-      )}
+
       {transactionResult() && (
         <TransactionResult
           result={transactionResult()}
