@@ -14,41 +14,106 @@ export interface InitializeCheckoutResponse {
   error?: string;
 }
 
-export interface OrderResponse {
+export const enum TransactionTypeEnum {
+  Deposit = "deposit",
+  Refund = "refund",
+  Credit = "credit",
+  Chargeback = "chargeback",
+  Representment = "representment",
+  VerifyCard = "verify-card",
+}
+
+export const enum TransactionMethodEnum {
+  Card = "card",
+  Wallet = "wallet",
+  Transfer = "transfer",
+}
+
+export const enum TransactionStatusEnum {
+  Start = "start",
+  CompleteOk = "complete-ok",
+  CancelOk = "cancel-ok",
+  RefundOk = "refund-ok",
+  VoidOk = "void-ok",
+  ChargeBack = "charge-back",
+  ChargeBackInProgress = "charge-back-in-progress",
+  CompleteFailed = "complete-failed",
+  InProgress = "in-progress",
+  "3DPending" = "3d-pending",
+  Uncertain = "uncertain",
+}
+
+export const enum CardTypeEnum {
+  Visa = "visa",
+  Mastercard = "mastercard",
+  Maestro = "maestro",
+}
+
+export const enum CardStatusEnum {
+  Active = "active",
+  Deleted = "deleted",
+}
+
+export interface TransactionCustomerData {
   id: number;
   siteId: number;
+  identifier: string;
+  firstName: string;
+  lastName: string;
+  country: string;
+  state: string;
+  city: string;
+  zipCode: string;
+  address: string;
+  phone: string;
+  email: string;
+  creationDate: string;
+  creationTimestamp: number;
+}
+
+export interface TransactionDetailsCard {
+  id: number;
   customerId: number;
-  customerData: {
-    id: number;
-    siteId: number;
-    identifier: string;
-    firstName: string;
-    lastName: string;
-    country: string;
-    state: string;
-    city: string;
-    zipCode: string;
-    address: string;
-    phone: string;
-    email: string;
-    isWhitelisted: number;
-    isWhitelistedUntil: string | null;
-    creationDate: string;
-    creationTimestamp: number;
+  type: CardTypeEnum;
+  cardNumber: string;
+  expiryMonth: string;
+  expiryYear: string;
+  nameOnCard: string;
+  cardStatus: string;
+  binInfo: {
+    bin: number;
+    brand: string;
+    type: string;
+    level: string;
+    countryCode: string;
+    bank: string;
   };
-  externalOrderId: string;
-  orderType: xMoneyOrderTypeEnum;
-  orderStatus: xMoneyOrderStatusEnum;
+}
+
+export interface TransactionDetails {
+  id: number;
+  siteId: number;
+  orderId: number;
+  customerId: number;
+  customerData: TransactionCustomerData;
+  transactionType: TransactionTypeEnum;
+  transactionMethod: TransactionMethodEnum;
+  transactionStatus: TransactionStatusEnum;
+  ip: string | null;
   amount: string;
   currency: string;
+  amountInEur: string;
   description: string;
-  level3Data: null;
-  saveCard: false;
-  invoiceEmail: string;
-  createdAt: string;
-  createdAtTimestamp: number;
-  transactionMethod: xMoneyTransactionMethodEnum;
-  transactionMethodId: number;
+  creationDate: string;
+  cardProviderName: string;
+  cardType: string;
+  cardNumber: string;
+  cardExpiryDate: string;
+  cardHolderName: string | null;
+  card: TransactionDetailsCard;
+  reason?: string | null;
+  parentTransactionId?: number;
+  relatedTransactionIds?: number[];
 }
 
 export enum xMoneyOrderStatusEnum {
@@ -73,6 +138,6 @@ export enum MatchStatusEnum {
   Matched = "MATCHED",
   NotMatched = "NOT_MATCHED",
   NotVerified = "NOT_VERIFIED",
-  PartiallyMatched = "PARTIALLY_MATCHED",
+  PartialMatched = "PARTIAL_MATCHED",
   NotSupported = "NOT_SUPPORTED",
 }

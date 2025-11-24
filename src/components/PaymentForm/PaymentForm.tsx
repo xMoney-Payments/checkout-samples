@@ -8,7 +8,10 @@ import {
   XMoneyPaymentFormConfig,
 } from "./payment-form.types";
 import { TransactionResult } from "../TransactionResult/TransactionResult";
-import { MatchStatusEnum } from "../../types/checkout.types";
+import {
+  MatchStatusEnum,
+  TransactionDetails,
+} from "../../types/checkout.types";
 
 declare global {
   interface Window {
@@ -43,7 +46,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             ...props.config,
             onReady: () => setIsReady(true),
             onError: (err: any) => console.error("❌ Payment error", err),
-            onPaymentComplete: (result: any) => {
+            onPaymentComplete: (result: TransactionDetails) => {
               setTransactionResult(result);
               window.scrollTo({ top: 0, behavior: "smooth" });
             },
@@ -51,21 +54,14 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         : {
             container: "payment-form-widget",
             options: {
+              buttonType: "topUp",
               appearance: lightThemeStyles,
               enableBackgroundRefresh: true,
-              displayCardHolderName: true,
-              cardOwnerVerification: {
-                name: {
-                  firstName: "customer_firstName",
-                  middleName: "customer_middleName",
-                  lastName: "customer_lastName",
-                },
-                ownerVerificationCallback: (matchResult: MatchStatusEnum) => {
-                  return (
-                    matchResult === MatchStatusEnum.Matched ||
-                    matchResult === MatchStatusEnum.PartiallyMatched
-                  );
-                },
+              googlePay: {
+                enabled: true,
+              },
+              applePay: {
+                enabled: true,
               },
             },
             checksum: props.result.checksum,
@@ -73,9 +69,10 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             publicKey: PUBLIC_KEY,
             sessionToken: props.sessionToken,
             userId: USER_ID,
+
             onReady: () => setIsReady(true),
-            onError: (err: any) => console.error("❌ Payment error", err),
-            onPaymentComplete: (result: any) => {
+            onError: (err) => console.error("❌ Payment error", err),
+            onPaymentComplete: (result: TransactionDetails) => {
               setTransactionResult(result);
               window.scrollTo({ top: 0, behavior: "smooth" });
             },
@@ -106,6 +103,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       )}
 
       <div id="payment-form-widget" style={{ opacity: isReady() ? 1 : 0 }} />
+
       {transactionResult() && (
         <TransactionResult
           result={transactionResult()}

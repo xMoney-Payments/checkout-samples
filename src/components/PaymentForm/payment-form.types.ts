@@ -1,4 +1,7 @@
-import { MatchStatusEnum, OrderResponse } from "../../types/checkout.types";
+import {
+  MatchStatusEnum,
+  TransactionDetails,
+} from "../../types/checkout.types";
 
 /**
  * Configuration options for initializing and customizing the XMoney payment form.
@@ -85,7 +88,19 @@ export interface XMoneyPaymentFormConfig {
        */
       rules?: Record<string, Record<string, string>>;
     };
-
+    /**
+     * Type of the button displayed on the payment form.
+     * @defaultValue `"pay"`
+     */
+    buttonType?:
+      | "book"
+      | "buy"
+      | "checkout"
+      | "donate"
+      | "order"
+      | "pay"
+      | "subscribe"
+      | "topUp";
     /**
      * Validation mode for the form.
      *
@@ -122,11 +137,11 @@ export interface XMoneyPaymentFormConfig {
     displaySaveCardOption?: boolean;
 
     /**
-     * Displays a cardholder name field in the form.
+     * Displays the submit button in the form.
      *
-     * @defaultValue `false`
+     * @defaultValue `true`
      */
-    displayCardHolderName?: boolean;
+    displaySubmitButton?: boolean;
     /**
      * Card owner verification options.
      */
@@ -144,12 +159,109 @@ export interface XMoneyPaymentFormConfig {
        */
       ownerVerificationCallback: (matchResult: MatchStatusEnum) => boolean;
     };
+    googlePay?: {
+      /**
+       * Enables Google Pay as a payment option.
+       *
+       * @defaultValue `false`
+       */
+      enabled?: boolean;
+      /**
+       * Appearance customization for Google Pay button.
+       */
+      appearance?: {
+        /**
+         * Style of the Google Pay button.
+         *
+         * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
+         */
+        color?: "white" | "black";
+        /**
+         * Corner radius of the Google Pay button.
+         * @defaultValue `12`
+         */
+        radius?: number;
+        /**
+         *  Type of the Google Pay button.
+         * @defaultValue `"pay"`
+         */
+        type?:
+          | "book"
+          | "buy"
+          | "checkout"
+          | "donate"
+          | "order"
+          | "plain"
+          | "pay"
+          | "subscribe";
+        /**
+         * Border type of the Google Pay button.
+         * @defaultValue `"no_border"`
+         */
+        borderType?: "default_border" | "no_border";
+      };
+    };
+    /**
+     * Appearance customization for Apple Pay button.
+     */
+    applePay?: {
+      /**
+       * Enables Apple Pay as a payment option.
+       *
+       * @defaultValue `false`
+       */
+      enabled?: boolean;
+      /**
+       * Appearance customization for Apple Pay button.
+       */
+      appearance?: {
+        /**
+         * Style of the Apple Pay button.
+         * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
+         */
+        style?: "white" | "black" | "white-outline";
+        /**
+         * Corner radius of the Apple Pay button.
+         * @defaultValue `12`
+         */
+        radius?: number;
+        /**
+         * Type of the Apple Pay button.
+         * @defaultValue `"pay"`
+         */
+        type?:
+          | "add-money"
+          | "book"
+          | "buy"
+          | "checkout"
+          | "contribute"
+          | "continue"
+          | "donate"
+          | "order"
+          | "plain"
+          | "pay"
+          | "reload"
+          | "rent"
+          | "set-up"
+          | "subscribe"
+          | "support"
+          | "tip"
+          | "top-up";
+      };
+    };
   };
 
   /**
    * Callback executed when the payment form is fully initialized and ready.
    */
   onReady?: () => void;
+
+  /**
+   * Callback executed when the form submission state changes.
+   *
+   * @param isPending - `true` if the form is submitting, `false` otherwise.
+   */
+  onSubmitPending?: (isPending: boolean) => void;
 
   /**
    * Callback executed when an error occurs within the payment form.
@@ -166,7 +278,7 @@ export interface XMoneyPaymentFormConfig {
    * @remarks
    * This callback will **not** be triggered if `enableBackgroundRefresh` is `false`.
    */
-  onPaymentComplete?: (data: OrderResponse) => void;
+  onPaymentComplete?: (data: TransactionDetails) => void;
 }
 
 /**
@@ -198,6 +310,11 @@ export interface XMoneyPaymentFormInstance {
     variables?: Record<string, string>;
     rules?: Record<string, Record<string, string>>;
   }) => void;
+
+  /**
+   * Submits the payment form.
+   */
+  submit: () => void;
 
   /**
    * Closes the payment form.

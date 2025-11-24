@@ -1,12 +1,13 @@
 body {
   margin: 0;
+  background-color: #f7f7f8;
 }
 
 .container {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: rgba(228, 232, 239, .5);
+  box-shadow: rgba(228, 232, 239, 0.5);
   width: 350px;
 }
 
