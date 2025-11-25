@@ -134,6 +134,13 @@ export enum xMoneyOrderTypeEnum {
   Purchase = "purchase",
 }
 
+export interface CardHolderVerificationResult {
+  status: MatchStatusEnum;
+  firstNameStatus?: MatchStatusEnum;
+  middleNameStatus?: MatchStatusEnum;
+  lastNameStatus?: MatchStatusEnum;
+}
+
 export enum MatchStatusEnum {
   Matched = "MATCHED",
   NotMatched = "NOT_MATCHED",

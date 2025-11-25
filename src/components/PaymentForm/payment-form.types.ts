@@ -1,5 +1,5 @@
 import {
-  MatchStatusEnum,
+  CardHolderVerificationResult,
   TransactionDetails,
 } from "../../types/checkout.types";
 
@@ -24,7 +24,7 @@ export interface XMoneyPaymentFormConfig {
    * @remarks
    * This field is **required**.
    */
-  checksum: string;
+  orderChecksum: string;
 
   /**
    * Base64-encoded order payload containing order details.
@@ -32,7 +32,7 @@ export interface XMoneyPaymentFormConfig {
    * @remarks
    * This field is **required**.
    */
-  payload: string;
+  orderPayload: string;
 
   /**
    * Public API key for the payment form, e.g., `"pk_{env}_{siteId}"`.
@@ -57,7 +57,7 @@ export interface XMoneyPaymentFormConfig {
    * @remarks
    * Required if `options.enableSavedCards` is `true`.
    */
-  userId?: number;
+  customerId?: number;
 
   /**
    * Options for customizing the appearance and behavior of form elements.
@@ -143,11 +143,11 @@ export interface XMoneyPaymentFormConfig {
      */
     displaySubmitButton?: boolean;
     /**
-     * Card owner verification options.
+     * Card holder verification options.
      */
-    cardOwnerVerification?: {
+    cardHolderVerification?: {
       /**
-       * Name information for card owner verification.
+       * Name information for card holder verification.
        */
       name: {
         firstName: string;
@@ -155,9 +155,11 @@ export interface XMoneyPaymentFormConfig {
         lastName: string;
       };
       /**
-       * Callback function for owner verification.
+       * Callback function for cardholder verification.
        */
-      ownerVerificationCallback: (matchResult: MatchStatusEnum) => boolean;
+      onCardHolderVerification: (
+        verificationResult: CardHolderVerificationResult
+      ) => boolean;
     };
     googlePay?: {
       /**
@@ -288,10 +290,16 @@ export interface XMoneyPaymentFormInstance {
   /**
    * Updates the order details in the payment form.
    *
-   * @param payload - Base64-encoded updated order payload.
-   * @param checksum - Checksum to validate the updated order.
+   * @param orderPayload - Base64-encoded updated order payload.
+   * @param orderChecksum - Checksum to validate the updated order.
    */
-  updateOrder: (payload: string, checksum: string) => void;
+  updateOrder: ({
+    orderPayload,
+    orderChecksum,
+  }: {
+    orderPayload: string;
+    orderChecksum: string;
+  }) => void;
 
   /**
    * Updates the locale of the payment form.

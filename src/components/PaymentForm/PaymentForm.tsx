@@ -1,17 +1,14 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { lightThemeStyles } from "../../example/styles/index";
-import { PUBLIC_KEY, USER_ID } from "../../constants";
+import { PUBLIC_KEY, CUSTOMER_ID } from "../../constants";
 import {
   XMoneyPaymentForm,
   XMoneyPaymentFormInstance,
   XMoneyPaymentFormConfig,
 } from "./payment-form.types";
 import { TransactionResult } from "../TransactionResult/TransactionResult";
-import {
-  MatchStatusEnum,
-  TransactionDetails,
-} from "../../types/checkout.types";
+import { TransactionDetails } from "../../types/checkout.types";
 
 declare global {
   interface Window {
@@ -54,7 +51,7 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         : {
             container: "payment-form-widget",
             options: {
-              buttonType: "topUp",
+              buttonType: "pay",
               appearance: lightThemeStyles,
               enableBackgroundRefresh: true,
               googlePay: {
@@ -64,11 +61,11 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
                 enabled: true,
               },
             },
-            checksum: props.result.checksum,
-            payload: props.result.payload,
+            orderChecksum: props.result.checksum,
+            orderPayload: props.result.payload,
             publicKey: PUBLIC_KEY,
             sessionToken: props.sessionToken,
-            userId: USER_ID,
+            customerId: CUSTOMER_ID,
 
             onReady: () => setIsReady(true),
             onError: (err) => console.error("❌ Payment error", err),
