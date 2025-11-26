@@ -92,7 +92,10 @@ export function Payments(): JSX.Element {
       };
 
       const intent = await createPaymentIntent(paymentParams);
-      paymentFormInstance?.updateOrder(intent.payload, intent.checksum);
+      paymentFormInstance?.updateOrder({
+        orderPayload: intent.payload,
+        orderChecksum: intent.checksum,
+      });
       setResult(intent);
 
       setIsUpdate(false);
