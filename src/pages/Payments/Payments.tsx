@@ -2,7 +2,7 @@ import { createSignal, onCleanup, onMount } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import "./Payments.css";
 
-import { createPaymentIntent, getSessionToken } from "../../api";
+import { createPaymentIntent } from "../../api";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
 import { XMoneyPaymentFormInstance } from "../../components/PaymentForm/payment-form.types";
 
@@ -32,7 +32,6 @@ export function Payments(): JSX.Element {
   const [formData, setFormData] = createSignal<FormData>(initialFormData);
   const [locale, setLocale] = createSignal<Locale>("en-US");
   const [theme, setTheme] = createSignal<Theme>("light");
-  const [sessionToken, setSessionToken] = createSignal<string>("");
   const [result, setResult] = createSignal<{
     payload: string;
     checksum: string;
@@ -42,8 +41,6 @@ export function Payments(): JSX.Element {
   let debounceTimeout: number | null = null;
 
   onMount(async () => {
-    const response = await getSessionToken();
-
     const paymentParams = {
       ...formData(),
       amount,
@@ -53,7 +50,6 @@ export function Payments(): JSX.Element {
 
     const intentResult = await createPaymentIntent(paymentParams);
 
-    setSessionToken(response.data?.token);
     setResult(intentResult);
     setIsLoading(false);
   });
@@ -61,7 +57,6 @@ export function Payments(): JSX.Element {
   onCleanup(() => {
     paymentFormInstance?.destroy?.();
     setFormData(initialFormData);
-    setSessionToken("");
     setResult(null);
     paymentFormInstance = null;
   });
@@ -168,7 +163,6 @@ export function Payments(): JSX.Element {
               paymentFormInstanceRef={(instance) => {
                 paymentFormInstance = instance;
               }}
-              sessionToken={sessionToken()}
               result={result()}
               onClose={() => {
                 document.querySelector(".checkout-header")?.remove();

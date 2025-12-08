@@ -19,7 +19,6 @@ declare global {
 interface PaymentFormProps {
   config?: XMoneyPaymentFormConfig;
   paymentFormInstanceRef: (instance: XMoneyPaymentFormInstance | null) => void;
-  sessionToken: string;
   result: { payload: string; checksum: string } | null;
   onClose: () => void;
 }
@@ -64,7 +63,6 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
             orderChecksum: props.result.checksum,
             orderPayload: props.result.payload,
             publicKey: PUBLIC_KEY,
-            sessionToken: props.sessionToken,
             customerId: CUSTOMER_ID,
 
             onReady: () => setIsReady(true),

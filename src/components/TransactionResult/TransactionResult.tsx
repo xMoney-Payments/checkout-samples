@@ -10,7 +10,7 @@ interface TransactionResultProps {
 export function TransactionResult(props: TransactionResultProps) {
   const [showRaw, setShowRaw] = createSignal(false);
   const { result } = props;
-  const isFailed = result.transactionStatus?.includes("failed") || !result.id;
+  const isFailed = result.transactionStatus?.includes("failed");
 
   return (
     <div class="transaction-result">
@@ -20,14 +20,9 @@ export function TransactionResult(props: TransactionResultProps) {
 
       <div class="summary-box">
         <p>
-          <strong>Transaction ID:</strong> {result.id}
+          <strong>Order ID:</strong> {result.externalOrderId}
         </p>
-        <p>
-          <strong>Order ID:</strong> {result.orderId}
-        </p>
-        <p>
-          <strong>Customer ID:</strong> {result.customerId}
-        </p>
+
         <p>
           <strong>Customer:</strong> {result.customerData?.firstName}{" "}
           {result.customerData?.lastName}
@@ -36,7 +31,7 @@ export function TransactionResult(props: TransactionResultProps) {
           <strong>Email:</strong> {result.customerData?.email}
         </p>
         <p>
-          <strong>Amount:</strong> {result.amount} {result.currency}
+          <strong>Amount:</strong> {result.amount} {result.currencyKey}
         </p>
         <p>
           <strong>Status:</strong> {result.transactionStatus}

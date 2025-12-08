@@ -1,7 +1,7 @@
 import { createSignal, onMount, Show } from "solid-js";
 import { PaymentForm } from "../../components/PaymentForm/PaymentForm";
 import { XMoneyPaymentFormConfig } from "../../components/PaymentForm/payment-form.types";
-import { createPaymentIntent, getSessionToken } from "../../api";
+import { createPaymentIntent } from "../../api";
 import { CURRENCY, INITIAL_FORM_DATA, PUBLIC_KEY } from "../../constants";
 
 import "./Debug.css";
@@ -25,15 +25,12 @@ export function DebugPaymentForm() {
       enableSavedCards: true,
       enableBackgroundRefresh: true,
       displaySaveCardOption: true,
-      displayCardHolderName: false,
     },
   });
 
   const [showForm, setShowForm] = createSignal(false);
 
   onMount(async () => {
-    const { data } = await getSessionToken();
-
     const paymentParams = {
       ...INITIAL_FORM_DATA,
       currency: CURRENCY,
@@ -44,7 +41,6 @@ export function DebugPaymentForm() {
 
     setConfig((prev) => ({
       ...prev,
-      sessionToken: data.token,
       checksum: intentResult?.checksum,
       payload: intentResult?.payload,
     }));
@@ -88,12 +84,12 @@ export function DebugPaymentForm() {
             User ID:
             <input
               type="number"
-              value={config().userId ?? ""}
-              placeholder="Enter user ID"
+              value={config().customerId ?? ""}
+              placeholder="Enter customer ID"
               min={1}
               onInput={(e) =>
                 handleNestedInput(
-                  ["userId"],
+                  ["customerId"],
                   e.currentTarget.value
                     ? Number(e.currentTarget.value)
                     : undefined
@@ -209,10 +205,9 @@ export function DebugPaymentForm() {
       <Show when={showForm()}>
         <PaymentForm
           config={config() as XMoneyPaymentFormConfig}
-          sessionToken={config().sessionToken || ""}
           result={{
-            checksum: config().checksum || "",
-            payload: config().payload || "",
+            checksum: config().orderChecksum || "",
+            payload: config().orderPayload || "",
           }}
           onClose={() => {
             setShowForm(false);
