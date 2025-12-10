@@ -43,23 +43,6 @@ export interface XMoneyPaymentFormConfig {
   publicKey: string;
 
   /**
-   * Session token used for background data refresh or saved card functionality.
-   *
-   * @remarks
-   * - Required if `options.enableBackgroundRefresh` is `true`.
-   * - Required if `options.enableSavedCards` is `true`.
-   */
-  sessionToken?: string;
-
-  /**
-   * User ID associated with the payment form.
-   *
-   * @remarks
-   * Required if `options.enableSavedCards` is `true`.
-   */
-  customerId?: number;
-
-  /**
    * Options for customizing the appearance and behavior of form elements.
    */
   options?: {

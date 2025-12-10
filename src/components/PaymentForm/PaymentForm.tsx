@@ -1,7 +1,7 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { lightThemeStyles } from "../../example/styles/index";
-import { PUBLIC_KEY, CUSTOMER_ID } from "../../constants";
+import { PUBLIC_KEY } from "../../constants";
 import {
   XMoneyPaymentForm,
   XMoneyPaymentFormInstance,
@@ -17,7 +17,6 @@ declare global {
 }
 
 interface PaymentFormProps {
-  config?: XMoneyPaymentFormConfig;
   paymentFormInstanceRef: (instance: XMoneyPaymentFormInstance | null) => void;
   result: { payload: string; checksum: string } | null;
   onClose: () => void;
@@ -36,43 +35,29 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       return;
     }
 
-    paymentFormInstance = new window.XMoneyPaymentForm(
-      props.config
-        ? {
-            ...props.config,
-            onReady: () => setIsReady(true),
-            onError: (err: any) => console.error("❌ Payment error", err),
-            onPaymentComplete: (result: TransactionDetails) => {
-              setTransactionResult(result);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            },
-          }
-        : {
-            container: "payment-form-widget",
-            options: {
-              buttonType: "pay",
-              appearance: lightThemeStyles,
-              enableBackgroundRefresh: true,
-              googlePay: {
-                enabled: true,
-              },
-              applePay: {
-                enabled: true,
-              },
-            },
-            orderChecksum: props.result.checksum,
-            orderPayload: props.result.payload,
-            publicKey: PUBLIC_KEY,
-            customerId: CUSTOMER_ID,
+    paymentFormInstance = new window.XMoneyPaymentForm({
+      container: "payment-form-widget",
+      options: {
+        buttonType: "pay",
+        appearance: lightThemeStyles,
+        googlePay: {
+          enabled: true,
+        },
+        applePay: {
+          enabled: true,
+        },
+      },
+      orderChecksum: props.result.checksum,
+      orderPayload: props.result.payload,
+      publicKey: PUBLIC_KEY,
 
-            onReady: () => setIsReady(true),
-            onError: (err) => console.error("❌ Payment error", err),
-            onPaymentComplete: (result: TransactionDetails) => {
-              setTransactionResult(result);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            },
-          }
-    );
+      onReady: () => setIsReady(true),
+      onError: (err) => console.error("❌ Payment error", err),
+      onPaymentComplete: (result: TransactionDetails) => {
+        setTransactionResult(result);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
+    });
 
     props.paymentFormInstanceRef(paymentFormInstance);
   });
