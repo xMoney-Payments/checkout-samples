@@ -3,11 +3,13 @@ import { Route, Router } from "@solidjs/router";
 import Layout from "./components/Layout";
 import TransactionResult from "./pages/TransactionResult/TransactionResult";
 import { Payments } from "./pages/Payments/Payments";
-import { DebugPaymentForm } from "./pages/Debug/Debug";
+import { PaymentMethods } from "./pages/PaymentMethods/PaymentMethods";
+import { CustomCardsPage } from "./pages/CustomCards/CustomCardsPage";
 
 const routes = [
   { path: "/", component: Payments },
-  { path: "/debug", component: DebugPaymentForm },
+  { path: "/payment-methods", component: PaymentMethods },
+  { path: "/custom-cards", component: CustomCardsPage },
   { path: "/transaction-result", component: TransactionResult },
 ];
 
