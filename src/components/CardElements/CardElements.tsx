@@ -1,22 +1,19 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-
 import { PUBLIC_KEY } from "../../constants";
 
 import { TransactionResult } from "../TransactionResult/TransactionResult";
 import { TransactionDetails } from "../../types/checkout.types";
-import { XMoneyPaymentFormInstance } from "../../types/xmoney-sdk/payment-form-sdk.types";
+import { XMoneyCardElementsInstance } from "../../types/xmoney-sdk/card-elements-sdk.types";
 import { LoadingOverlay } from "../LoadingSpinner/LoadingSpinner";
 
-interface PaymentFormProps {
-  paymentFormInstanceRef: (instance: XMoneyPaymentFormInstance | null) => void;
+interface CardElementsProps {
   result: { payload: string; checksum: string } | null;
   onClose: () => void;
 }
 
-export function PaymentForm(props: PaymentFormProps): JSX.Element {
-  const [paymentFormInstance, setPaymentFormInstance] =
-    createSignal<XMoneyPaymentFormInstance | null>(null);
+export function CardElements(props: CardElementsProps): JSX.Element {
+  let cardElementsInstance: XMoneyCardElementsInstance | undefined;
   const [isReady, setIsReady] = createSignal(false);
   const [transactionResult, setTransactionResult] = createSignal<any>(null);
   const containerId = `container-${Math.random().toString(36).substring(2, 15)}`;
@@ -29,20 +26,10 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
       return;
     }
 
-    const instance = await window.XMoney.paymentForm({
+    cardElementsInstance = await window.XMoney.cardElements({
       container: containerId,
       options: {
         buttonType: "pay",
-        cardHolderVerification: {
-          name: { firstName: "John", middleName: "M", lastName: "Michael" },
-          onCardHolderVerification: (verificationResult) => {
-            console.log("Card Holder Verification Result:", verificationResult);
-            // Example: Require full match for cardholder name
-            return true;
-          },
-        },
-        googlePay: { enabled: true },
-        applePay: { enabled: true },
       },
       orderChecksum: props.result.checksum,
       orderPayload: props.result.payload,
@@ -58,19 +45,10 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         window.scrollTo({ top: 0, behavior: "smooth" });
       },
     });
-
-    setPaymentFormInstance(instance);
-    props.paymentFormInstanceRef(instance);
   });
 
   onCleanup(() => {
-    const instance = paymentFormInstance();
-    if (instance) {
-      console.log("Destroying PaymentForm instance");
-      instance.destroy();
-      setPaymentFormInstance(null);
-    }
-    props.paymentFormInstanceRef(null);
+    cardElementsInstance?.destroy?.();
   });
 
   return (
@@ -82,8 +60,8 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
         "min-height": "200px",
       }}
     >
-      {!isReady() && (
-        <LoadingOverlay size="medium" message="Loading payment form..." />
+      {(!isReady() || isPending) && (
+        <LoadingOverlay size="medium" message="Loading card elements..." />
       )}
 
       <div
@@ -93,6 +71,15 @@ export function PaymentForm(props: PaymentFormProps): JSX.Element {
           display: isReady() && !isPending ? "block" : "none",
         }}
       />
+
+      <button
+        class="close-button"
+        onClick={async () =>
+          console.log(await cardElementsInstance?.validateForm())
+        }
+      >
+        Validate Form
+      </button>
 
       {transactionResult() && (
         <TransactionResult

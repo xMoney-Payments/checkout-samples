@@ -1,0 +1,162 @@
+.google-pay-container {
+  padding: 0;
+  position: relative;
+  height: 40px;
+}
+
+.payment-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 5;
+}
+
+.skeleton {
+  width: 100%;
+  height: 24px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f4f6;
+  border-top-color: #4285f4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.payment-loading p {
+  color: #6b7280;
+  font-size: 12px;
+  margin: 0;
+  display: none;
+}
+
+.payment-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 48px;
+}
+
+.payment-error p {
+  color: #dc2626;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.error-hint {
+  color: #6b7280 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.payment-method-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.payment-info {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-detail .label {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.payment-detail .value {
+  color: #111827;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.google-pay-button {
+  width: 100%;
+  min-height: 48px;
+  background-color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.google-pay-button:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.google-pay-button:active {
+  transform: translateY(0);
+}
+
+.google-pay-button svg {
+  height: 24px;
+  width: auto;
+}
+
+.payment-description {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .google-pay-container {
+    padding: 16px;
+  }
+}
