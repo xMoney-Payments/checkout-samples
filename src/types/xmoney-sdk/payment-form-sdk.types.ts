@@ -237,3 +237,13 @@ export interface XMoneyPaymentFormInstance extends XMoneyBaseInstance {
    */
   submit: () => void;
 }
+
+export interface XMoneyPaymentForm {
+  /**
+   * Creates and initializes a new payment form instance.
+   *
+   * @param config - The configuration object required to initialize the payment form.
+   * @returns An initialized {@link XMoneyPaymentFormInstance}.
+   */
+  new (config: XMoneyPaymentFormConfig): XMoneyPaymentFormInstance;
+}

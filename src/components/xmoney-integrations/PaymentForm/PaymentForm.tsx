@@ -22,7 +22,7 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
   const containerId = `container-${Math.random().toString(36).substring(2, 15)}`;
 
   onMount(async () => {
-    const instance = await window.XMoney.paymentForm({
+    const instance = new window.XMoneyPaymentForm({
       container: containerId,
       options: {
         buttonType: "pay",

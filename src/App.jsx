@@ -2,12 +2,8 @@ import { Suspense } from "solid-js";
 import { Route, Router } from "@solidjs/router";
 import Layout from "./components/Layout";
 import { Payments } from "./pages/PaymentForm/PaymentForm";
-import { EmbeddedComponents } from "./pages/EmbeddedComponents/EmbeddedComponents";
 
-const routes = [
-  { path: "/", component: Payments },
-  { path: "/payment-methods", component: EmbeddedComponents },
-];
+const routes = [{ path: "/", component: Payments }];
 
 export const App = () => {
   return (

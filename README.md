@@ -11,7 +11,6 @@ This repository provides comprehensive code examples showing how to integrate th
 - Initialize and configure the xMoney SDK
 - Handle payment lifecycles and callbacks
 - Customize appearance and behavior
-- Integrate multiple payment methods
 - Implement proper error handling and state management
 
 ## ✨ SDK Methods Demonstrated
@@ -19,10 +18,6 @@ This repository provides comprehensive code examples showing how to integrate th
 ### Payment Integration Methods
 
 - 🎨 **Payment Form** (`XMoney.paymentForm()`) - Full-featured embedded payment form with card input
-- 💳 **Card Elements** (`XMoney.cardElements()`) - Individual card input elements for custom layouts
-- 🍎 **Apple Pay** (`XMoney.applePay()`) - Native Apple Pay integration
-- 🅖 **Google Pay** (`XMoney.googlePay()`) - Native Google Pay integration
-- 💾 **Saved Card Payment** (`XMoney.savedCardPayment()`) - Payment with previously saved cards
 
 ### Developer Experience
 
@@ -39,7 +34,7 @@ Integrating xMoney SDK into your application requires these steps:
 
 1. **Load the SDK** - Add the xMoney script tag to your HTML
 2. **Create Payment Intent** - Call your backend to get `orderPayload` and `orderChecksum`
-3. **Initialize SDK Method** - Call the appropriate `window.XMoney.*()` method
+3. **Initialize SDK Method** - Call the appropriate `window.XMoneyPaymentForm` constructor
 4. **Handle Callbacks** - Implement `onReady`, `onPaymentComplete`, `onError` handlers
 5. **Cleanup** - Call `destroy()` when component unmounts
 
@@ -73,7 +68,7 @@ export const API_BASE = "https://your-api-endpoint.com";
 
 ### Running the App
 
-```bash
+````bash
 # Development mode
 npm run dev
 # or
@@ -91,10 +86,6 @@ npm run build
 Check these files for complete, production-ready examples:
 
 - [PaymentForm.tsx](src/components/xmoney-integrations/PaymentForm/PaymentForm.tsx)
-- [CardElements.tsx](src/components/xmoney-integrations/CardElements/CardElements.tsx)
-- [ApplePay.tsx](src/components/xmoney-integrations/ApplePay/ApplePay.tsx)
-- [GooglePay.tsx](src/components/xmoney-integrations/GooglePay/GooglePay.tsx)
-- [SavedCardPayment.tsx](src/components/xmoney-integrations/SavedCardPayment/SavedCardPayment.tsx)
 
 ## 📦 Loading the SDK
 
@@ -111,28 +102,25 @@ Before using any SDK methods, you must load the xMoney SDK script in your HTML:
     <div id="root"></div>
 
     <!-- Load xMoney SDK -->
-    <script src="https://secure.xmoney.com/sdk/v2/xmoney.js"></script>
+    <script src="https://secure.xmoney.com/sdk/v1/xmoney.js"></script>
 
     <!-- Your app script -->
     <script src="/src/main.js" type="module"></script>
   </body>
 </html>
-```
+````
 
 ### Environment-specific SDK URLs
 
 ```html
 <!-- Production -->
-## 📖 SDK Integration Examples
+<script src="https://secure.xmoney.com/sdk/v1/xmoney.js"></script>
 
 <!-- Staging -->
-<script src="https://secure-stage.xmoney.com/sdk/v2/xmoney.js"></script>
-
-<!-- Local Development -->
-<script src="https://localhost:8080/xmoney.js"></script>
+<script src="https://secure-stage.xmoney.com/sdk/v1/xmoney.js"></script>
 ```
 
-The SDK exposes a global `window.XMoney` object with all payment methods.
+The SDK exposes a global `window.XMoneyPaymentForm` constructor.
 
 ## 🔐 Creating Payment Intents
 
@@ -170,7 +158,7 @@ const createPaymentIntent = async (paymentData) => {
 const { payload, checksum } = await createPaymentIntent(paymentData);
 
 // Use it to initialize any SDK method
-const instance = await window.XMoney.paymentForm({
+const instance = new window.XMoneyPaymentForm({
   container: "#payment-form",
   orderChecksum: checksum,
   orderPayload: payload,
@@ -189,7 +177,7 @@ The full payment form includes card input, Apple Pay, and Google Pay options:
 
 ```typescript
 // Initialize the payment form
-const paymentFormInstance = await window.XMoney.paymentForm({
+const paymentFormInstance = new window.XMoneyPaymentForm({
   container: "#payment-form-container", // or document.getElementById('payment-form-container')
   orderChecksum: "your-order-checksum",
   orderPayload: "your-base64-encoded-payload",
@@ -238,182 +226,6 @@ paymentFormInstance.updateOrder({
 paymentFormInstance.destroy();
 ```
 
-### Card Elements Integration
-
-For custom payment form layouts with individual card input elements:
-
-```typescript
-// Initialize card elements
-const cardElementsInstance = await window.XMoney.cardElements({
-  container: "#card-elements-container",
-  orderChecksum: "your-order-checksum",
-  orderPayload: "your-base64-encoded-payload",
-  publicKey: "pk_test_your_key",
-
-  options: {
-    buttonType: "pay",
-    validationMode: "onChange",
-    enableSavedCards: false,
-    displaySaveCardOption: false,
-    appearance: {
-      theme: "dark",
-      variables: {
-        colorPrimary: "#1976d2",
-      },
-    },
-  },
-
-  onReady: () => {
-    console.log("Card elements ready");
-  },
-
-  onError: (err) => {
-    console.error("Card elements error:", err);
-  },
-
-  onSubmitPending: (isPending) => {
-    console.log("Submitting:", isPending);
-  },
-
-  onPaymentComplete: (result) => {
-    console.log("Payment successful:", result);
-  },
-});
-
-// Cleanup
-cardElementsInstance.destroy();
-```
-
-### Apple Pay Integration
-
-```typescript
-// Initialize Apple Pay
-const applePayInstance = await window.XMoney.applePay({
-  container: "#apple-pay-button",
-  orderChecksum: "your-order-checksum",
-  orderPayload: "your-base64-encoded-payload",
-  publicKey: "pk_test_your_key",
-
-  options: {
-    locale: "en-US",
-    enableBackgroundRefresh: true,
-    appearance: {
-      style: "black", // "white" | "black" | "white-outline"
-      radius: 12,
-      type: "pay", // Button text type
-    },
-  },
-
-  onReady: () => {
-    console.log("Apple Pay button ready");
-  },
-
-  onError: (err) => {
-    console.error("Apple Pay error:", err);
-  },
-
-  onSubmitPending: (isPending) => {
-    console.log("Processing:", isPending);
-  },
-
-  onPaymentComplete: (result) => {
-    console.log("Apple Pay payment completed:", result);
-  },
-});
-
-// Cleanup
-applePayInstance.destroy();
-```
-
-### Google Pay Integration
-
-```typescript
-// Initialize Google Pay
-const googlePayInstance = await window.XMoney.googlePay({
-  container: "#google-pay-button",
-  orderChecksum: "your-order-checksum",
-  orderPayload: "your-base64-encoded-payload",
-  publicKey: "pk_test_your_key",
-
-  options: {
-    locale: "en-US",
-    enableBackgroundRefresh: true,
-    appearance: {
-      color: "black", // "white" | "black"
-      radius: 12,
-      type: "pay",
-      borderType: "no_border", // "default_border" | "no_border"
-    },
-  },
-
-  onReady: () => {
-    console.log("Google Pay button ready");
-  },
-
-  onError: (err) => {
-    console.error("Google Pay error:", err);
-  },
-
-  onSubmitPending: (isPending) => {
-    console.log("Processing:", isPending);
-  },
-
-  onPaymentComplete: (result) => {
-    console.log("Google Pay payment completed:", result);
-  },
-});
-
-// Cleanup
-googlePayInstance.destroy();
-```
-
-### Saved Card Payment
-
-```typescript
-// Initialize saved card payment
-const savedCardInstance = await window.XMoney.savedCardPayment({
-  orderChecksum: "your-order-checksum",
-  orderPayload: "your-base64-encoded-payload",
-  publicKey: "pk_test_your_key",
-
-  onReady: () => {
-    console.log("Saved card payment ready");
-  },
-
-  onError: (err) => {
-    console.error("Saved card payment error:", err);
-  },
-
-  onPaymentComplete: (result) => {
-    console.log("Payment successful:", result);
-  },
-});
-
-// Trigger payment with a saved card ID
-savedCardInstance.pay(cardId);
-
-// Cleanup
-savedCardInstance.destroy();
-```
-
-### Common SDK Instance Methods
-
-All SDK instances share these common methods:
-
-```typescript
-// Update order details (for payment form, card elements, Apple Pay, Google Pay)
-instance.updateOrder({
-  orderPayload: "new-base64-payload",
-  orderChecksum: "new-checksum",
-});
-
-// Close the payment UI (doesn't destroy the instance)
-instance.close();
-
-// Destroy the instance and cleanup all resources
-instance.destroy();
-```
-
 ### TypeScript Support
 
 Import types for full autocomplete and type safety:
@@ -436,8 +248,9 @@ const config: XMoneyPaymentFormConfig = {
   },
 };
 
-const instance: XMoneyPaymentFormInstance =
-  await window.XMoney.paymentForm(config);
+const instance: XMoneyPaymentFormInstance = new window.XMoneyPaymentForm(
+  config,
+);
 ```
 
 ## 🎨 Customization
@@ -492,13 +305,10 @@ appearance: {
 
 ## 📁 Project Structure
 
-```
+````
 checkout-samples/
 ├── src/
-│   │   │   ├── ApplePay/            # Apple Pay integration
-│   │   │   ├── GooglePay/           # Google Pay integration
 │   │   │   ├── payment-form-sdk.types.ts
-│   │   │   ├── card-elements-sdk.types.ts
 │   │   └── xmoney-global.d.ts       # Global SDK declarations
 │   ├── pages/                       # Example pages showcasing integrations
 │   ├── api/                         # Payment intent creation utilities
@@ -530,7 +340,7 @@ interface XMoneyBaseConfig {
   onError?: (err: Error) => void; // Called on errors
   onPaymentComplete?: (data) => void; // Called on successful payment
 }
-```
+````
 
 ### Payment Form Specific Options
 
