@@ -62,9 +62,9 @@ export interface XMoneyApplePayConfig extends XMoneyBaseConfig {
   /**
    * Callback executed when the Apple Pay submission state changes.
    *
-   * @param isPending - `true` if the Apple Pay is submitting, `false` otherwise.
+   * @param isProcessing - `true` if the Apple Pay is processing a payment, `false` otherwise.
    */
-  onSubmitPending?: (isPending: boolean) => void;
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 /**

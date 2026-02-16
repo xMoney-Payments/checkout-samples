@@ -112,9 +112,9 @@ export interface XMoneyCardElementsConfig extends XMoneyBaseConfig {
   /**
    * Callback executed when the form submission state changes.
    *
-   * @param isPending - `true` if the form is submitting, `false` otherwise.
+   * @param isProcessing - `true` if the form is processing a payment, `false` otherwise.
    */
-  onSubmitPending?: (isPending: boolean) => void;
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 /**

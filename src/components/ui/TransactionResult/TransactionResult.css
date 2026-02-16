@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+.transaction-result {
+  @apply max-w-2xl mx-auto my-5 p-6 rounded-xl;
+  background-color: #ffffff;
+  border: 1px solid var(--color-neutral-100);
+  box-shadow: 0 12px 28px rgba(22, 20, 26, 0.08);
+}
+
+.transaction-result h2 {
+  @apply text-2xl mb-4 font-bold;
+}
+
+.status-success {
+  color: var(--color-green-600);
+}
+
+.status-failed {
+  color: var(--color-red-600);
+}
+
+.summary-box {
+  @apply rounded-md p-4 text-sm leading-relaxed;
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-200);
+}
+
+.summary-box p {
+  @apply my-1.5;
+}
+
+.toggle-btn,
+.retry-btn {
+  @apply inline-block mt-4 py-2.5 px-4 text-sm border-none rounded cursor-pointer;
+}
+
+.toggle-btn {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary-500),
+    var(--color-primary-400)
+  );
+  color: #ffffff;
+  border: 1px solid var(--color-primary-600);
+  transition: filter 0.2s ease;
+}
+
+.toggle-btn:hover {
+  filter: brightness(1.03);
+}
+
+.retry-btn {
+  background-color: var(--color-neutral-700);
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+.retry-btn:hover {
+  background-color: var(--color-neutral-800);
+}
+
+.raw-json {
+  @apply p-3 rounded-md mt-3 overflow-x-auto text-xs font-mono;
+  background-color: var(--color-neutral-900);
+  color: var(--color-neutral-50);
+}
+
+.button-group {
+  @apply flex justify-between mt-4 gap-3;
+}

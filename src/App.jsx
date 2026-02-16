@@ -1,16 +1,12 @@
-import { Suspense, lazy } from "solid-js";
+import { Suspense } from "solid-js";
 import { Route, Router } from "@solidjs/router";
 import Layout from "./components/Layout";
-import TransactionResult from "./pages/TransactionResult/TransactionResult";
-import { Payments } from "./pages/Payments/Payments";
-import { PaymentMethods } from "./pages/PaymentMethods/PaymentMethods";
-import { CustomCardsPage } from "./pages/CustomCards/CustomCardsPage";
+import { Payments } from "./pages/PaymentForm/PaymentForm";
+import { EmbeddedComponents } from "./pages/EmbeddedComponents/EmbeddedComponents";
 
 const routes = [
   { path: "/", component: Payments },
-  { path: "/payment-methods", component: PaymentMethods },
-  { path: "/custom-cards", component: CustomCardsPage },
-  { path: "/transaction-result", component: TransactionResult },
+  { path: "/payment-methods", component: EmbeddedComponents },
 ];
 
 export const App = () => {

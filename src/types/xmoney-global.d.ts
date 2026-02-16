@@ -14,6 +14,7 @@ import {
   XMoneyPaymentFormConfig,
   XMoneyPaymentFormInstance,
 } from "./xmoney-sdk/payment-form-sdk.types";
+import { PaymentMethodCapabilities } from "./xmoney-sdk/payment-method-capabilities.types";
 import {
   XMoneySavedCardPaymentInstance,
   XMoneySavedCardPaymentConfig,
@@ -25,18 +26,19 @@ declare global {
       paymentForm: (
         config: XMoneyPaymentFormConfig,
       ) => Promise<XMoneyPaymentFormInstance>;
+      paymentCard: (
+        config: XMoneyCardElementsConfig,
+      ) => Promise<XMoneyCardElementsInstance>;
+      savedCardPayment: (
+        config: XMoneySavedCardPaymentConfig,
+      ) => Promise<XMoneySavedCardPaymentInstance>;
       googlePay: (
         config: XMoneyGooglePayConfig,
       ) => Promise<XMoneyGooglePayInstance>;
       applePay: (
         config: XMoneyApplePayConfig,
       ) => Promise<XMoneyApplePayInstance>;
-      cardElements: (
-        config: XMoneyCardElementsConfig,
-      ) => Promise<XMoneyCardElementsInstance>;
-      savedCardPayment: (
-        config: XMoneySavedCardPaymentConfig,
-      ) => Promise<XMoneySavedCardPaymentInstance>;
+      getPaymentMethodCapabilities: () => Promise<PaymentMethodCapabilities>;
     };
   }
 }

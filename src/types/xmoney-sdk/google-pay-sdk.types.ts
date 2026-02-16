@@ -59,9 +59,9 @@ export interface XMoneyGooglePayConfig extends XMoneyBaseConfig {
   /**
    * Callback executed when the Google Pay state changes.
    *
-   * @param isPending - `true` if the method is submitting, `false` otherwise.
+   * @param isProcessing - `true` if the method is processing a payment, `false` otherwise.
    */
-  onSubmitPending?: (isPending: boolean) => void;
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 /**
