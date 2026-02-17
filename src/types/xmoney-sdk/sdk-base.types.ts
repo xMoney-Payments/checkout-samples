@@ -40,18 +40,6 @@ export interface XMoneyBaseConfig {
   publicKey: string;
 
   /**
-   * Options for customizing the appearance and behavior of form elements.
-   */
-  options?: {
-    /**
-     * Enables background data refresh for the payment form.
-     *
-     * @defaultValue `true`
-     */
-    enableBackgroundRefresh?: boolean;
-  };
-
-  /**
    * Callback executed when the payment form is fully initialized and ready.
    */
   onReady?: () => void;
@@ -72,6 +60,12 @@ export interface XMoneyBaseConfig {
    * This callback will **not** be triggered if `enableBackgroundRefresh` is `false`.
    */
   onPaymentComplete?: (data: TransactionDetails) => void;
+  /**
+   * Callback executed when the form submission state changes.
+   *
+   * @param isProcessing - `true` if the form is submitting, `false` otherwise.
+   */
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 export interface XMoneyBaseInstance {

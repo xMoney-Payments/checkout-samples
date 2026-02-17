@@ -24,8 +24,24 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
   onMount(async () => {
     const instance = await window.XMoney.paymentForm({
       container: containerId,
-      options: {
-        buttonType: "pay",
+      card: {
+        savedCards: {
+          enabled: true,
+          optInVisible: false,
+        },
+        cardHolderVerification: {
+          name: {
+            firstName: "",
+            middleName: "",
+            lastName: "",
+          },
+          onCardHolderVerification: (verificationResult) => {
+            console.log("Card holder verification result:", verificationResult);
+            return true;
+          },
+        },
+      },
+      paymentMethods: {
         googlePay: { enabled: true },
         applePay: { enabled: true },
       },
@@ -43,8 +59,8 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
         console.error("❌ Payment error", err);
         props.onError?.(err);
       },
-      onSubmitPending: (pending) => {
-        setIsSubmitPending(pending);
+      onPaymentProcessing: (isProcessing) => {
+        setIsSubmitPending(isProcessing);
       },
       onPaymentComplete: (result: TransactionDetails) => {
         props.onPaymentComplete?.(result);

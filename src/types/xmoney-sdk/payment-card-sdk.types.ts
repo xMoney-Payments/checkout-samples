@@ -4,7 +4,7 @@ import { XMoneyBaseConfig, XMoneyBaseInstance } from "./sdk-base.types";
 /**
  * Configuration options for initializing and customizing the xMoney payment form.
  */
-export interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
+export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
   card?: {
     /**
      * Validation mode for the form.
@@ -28,11 +28,11 @@ export interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
     };
     submitButton?: {
       /**
-       * Displays the submit button in the form.
+       * Visibility of the submit button in the form.
        *
        * @defaultValue `true`
        */
-      enabled?: boolean;
+      visible?: boolean;
       /**
        * Type of the submit button.
        *
@@ -68,103 +68,6 @@ export interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
       ) => boolean;
     };
   };
-
-  paymentMethods?: {
-    /**
-     * Configuration for google payment methods.
-     */
-    googlePay?: {
-      /**
-       * Enables Google Pay as a payment option.
-       *
-       * @defaultValue `false`
-       */
-      enabled?: boolean;
-      /**
-       * Appearance customization for Google Pay button.
-       */
-      appearance?: {
-        /**
-         * Style of the Google Pay button.
-         *
-         * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
-         */
-        color?: "white" | "black";
-        /**
-         * Corner radius of the Google Pay button.
-         * @defaultValue `12`
-         */
-        radius?: number;
-        /**
-         *  Type of the Google Pay button.
-         * @defaultValue `"pay"`
-         */
-        type?:
-          | "book"
-          | "buy"
-          | "checkout"
-          | "donate"
-          | "order"
-          | "plain"
-          | "pay"
-          | "subscribe";
-        /**
-         * Border type of the Google Pay button.
-         * @defaultValue `"no_border"`
-         */
-        borderType?: "default_border" | "no_border";
-      };
-    };
-    /**
-     * Configuration for apple payment methods.
-     */
-    applePay?: {
-      /**
-       * Enables Apple Pay as a payment option.
-       *
-       * @defaultValue `false`
-       */
-      enabled?: boolean;
-      /**
-       * Appearance customization for Apple Pay button.
-       */
-      appearance?: {
-        /**
-         * Style of the Apple Pay button.
-         * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
-         */
-        style?: "white" | "black" | "white-outline";
-        /**
-         * Corner radius of the Apple Pay button.
-         * @defaultValue `12`
-         */
-        radius?: number;
-        /**
-         * Type of the Apple Pay button.
-         * @defaultValue `"pay"`
-         */
-        type?:
-          | "add-money"
-          | "book"
-          | "buy"
-          | "checkout"
-          | "contribute"
-          | "continue"
-          | "donate"
-          | "order"
-          | "plain"
-          | "pay"
-          | "reload"
-          | "rent"
-          | "set-up"
-          | "subscribe"
-          | "support"
-          | "tip"
-          | "top-up";
-      };
-    };
-  };
-
   /**
    * Options for customizing the appearance and behavior of form elements.
    */
@@ -202,12 +105,19 @@ export interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
      */
     locale?: "en-US" | "el-GR" | "ro-RO";
   };
+
+  /**
+   * Callback executed when the form submission state changes.
+   *
+   * @param isProcessing - `true` if the form is processing a payment, `false` otherwise.
+   */
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 /**
- * Represents an instance of the XMoney payment form, providing methods to interact with and manage the form.
+ * Represents an instance of the XMoney payment card, providing methods to interact with and manage the form.
  */
-export interface XMoneyPaymentFormInstance extends XMoneyBaseInstance {
+export interface XMoneyPaymentCardInstance extends XMoneyBaseInstance {
   /**
    * Updates the locale of the payment form.
    *
@@ -236,5 +146,8 @@ export interface XMoneyPaymentFormInstance extends XMoneyBaseInstance {
    *
    * @returns An object containing the validation status and any errors found.
    */
-  validate: () => { isValid: boolean; errors: Record<string, string> };
+  validate: () => Promise<{
+    isValid: boolean;
+    errors: Record<string, { message: string; code: string }>;
+  }>;
 }

@@ -3,9 +3,9 @@ import {
   XMoneyApplePayInstance,
 } from "./xmoney-sdk/apple-pay-sdk.types";
 import {
-  XMoneyCardElementsConfig,
+  XMoneyPaymentCardConfig,
   XMoneyCardElementsInstance,
-} from "./xmoney-sdk/card-elements-sdk.types";
+} from "./xmoney-sdk/payment-card-sdk.types";
 import {
   XMoneyGooglePayInstance,
   XMoneyGooglePayConfig,
@@ -27,7 +27,7 @@ declare global {
         config: XMoneyPaymentFormConfig,
       ) => Promise<XMoneyPaymentFormInstance>;
       paymentCard: (
-        config: XMoneyCardElementsConfig,
+        config: XMoneyPaymentCardConfig,
       ) => Promise<XMoneyCardElementsInstance>;
       savedCardPayment: (
         config: XMoneySavedCardPaymentConfig,

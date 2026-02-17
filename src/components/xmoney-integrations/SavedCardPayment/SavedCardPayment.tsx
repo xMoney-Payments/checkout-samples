@@ -72,7 +72,7 @@ export function SavedCardPayment(props: SavedCardPaymentProps): JSX.Element {
           onClick={() => {
             if (!savedCardPaymentInstance || !selectedCardId()) return;
             setIsPending(true);
-            savedCardPaymentInstance.pay(selectedCardId()!);
+            savedCardPaymentInstance.pay({ cardId: selectedCardId()! });
           }}
         >
           {isPending() ? "Processing..." : "Pay with Selected Card"}

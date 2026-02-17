@@ -55,13 +55,6 @@ export interface XMoneyGooglePayConfig extends XMoneyBaseConfig {
       borderType?: "default_border" | "no_border";
     };
   };
-
-  /**
-   * Callback executed when the Google Pay state changes.
-   *
-   * @param isProcessing - `true` if the method is processing a payment, `false` otherwise.
-   */
-  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 /**

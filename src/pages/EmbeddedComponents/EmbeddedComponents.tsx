@@ -8,7 +8,7 @@ import { GooglePay } from "../../components/xmoney-integrations/GooglePay/Google
 import { ApplePay } from "../../components/xmoney-integrations/ApplePay/ApplePay";
 import { createPaymentIntent } from "../../api";
 import { CURRENCY, INITIAL_FORM_DATA, PUBLIC_KEY } from "../../constants";
-import { CardElements } from "../../components/xmoney-integrations/CardElements/CardElements";
+import { PaymentCard } from "../../components/xmoney-integrations/PaymentCard/PaymentCard";
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import { ErrorAlert } from "../../components/ui/ErrorAlert/ErrorAlert";
 import { PageContainer } from "../../components/ui/PageContainer/PageContainer";
@@ -145,7 +145,7 @@ export function EmbeddedComponents(): JSX.Element {
                 }
                 index={1}
               >
-                <CardElements
+                <PaymentCard
                   payload={result()!.payload}
                   checksum={result()!.checksum}
                   onPaymentComplete={handlePaymentComplete}

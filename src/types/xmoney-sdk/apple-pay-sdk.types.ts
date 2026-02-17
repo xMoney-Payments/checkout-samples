@@ -14,12 +14,7 @@ export interface XMoneyApplePayConfig extends XMoneyBaseConfig {
      * @defaultValue `"en-US"`
      */
     locale?: "en-US" | "el-GR" | "ro-RO";
-    /**
-     * Enables background data refresh for the payment method.
-     *
-     * @defaultValue `true`
-     */
-    enableBackgroundRefresh?: boolean;
+
     /**
      * Appearance customization options.
      */
@@ -58,13 +53,6 @@ export interface XMoneyApplePayConfig extends XMoneyBaseConfig {
         | "top-up";
     };
   };
-
-  /**
-   * Callback executed when the Apple Pay submission state changes.
-   *
-   * @param isProcessing - `true` if the Apple Pay is processing a payment, `false` otherwise.
-   */
-  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 /**
