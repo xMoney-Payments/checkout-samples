@@ -1,4 +1,4 @@
-import { API_BASE } from "../constants";
+import { API_BASE } from "../config";
 import { InitializeCheckoutModel } from "../types/checkout.types";
 
 export interface PaymentIntentResponse {
@@ -8,7 +8,7 @@ export interface PaymentIntentResponse {
 }
 
 export async function createPaymentIntent(
-  data: InitializeCheckoutModel
+  data: InitializeCheckoutModel,
 ): Promise<PaymentIntentResponse> {
   const response = await fetch(`${API_BASE}/checkout-initialization`, {
     method: "POST",

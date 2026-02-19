@@ -1,7 +1,7 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 
-import { PUBLIC_KEY } from "../../../constants";
+import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
 import { XMoneyPaymentFormInstance } from "../../../types/xmoney-sdk/payment-form-sdk.types";
 import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";

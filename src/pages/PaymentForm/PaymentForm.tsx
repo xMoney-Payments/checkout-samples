@@ -10,7 +10,8 @@ import {
   PaymentMethodCardIcon,
 } from "../../components/ui/SectionCard/SectionCard";
 
-import { CURRENCY, PUBLIC_KEY } from "../../constants";
+import { CURRENCY } from "../../constants";
+import { PUBLIC_KEY } from "../../config";
 
 import { CustomerInformation } from "./payments.types";
 import { XMoneyPaymentFormInstance } from "../../types/xmoney-sdk/payment-form-sdk.types";

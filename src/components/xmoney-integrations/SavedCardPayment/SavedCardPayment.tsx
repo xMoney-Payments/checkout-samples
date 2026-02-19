@@ -2,10 +2,11 @@ import { createEffect, createSignal, onCleanup, onMount, Show } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { Card, TransactionDetails } from "../../../types/checkout.types";
 import { XMoneySavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
-import { PUBLIC_KEY } from "../../../constants";
+import { CUSTOMER_ID } from "../../../constants";
 import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";
 import { CustomCards } from "../../ui/CustomCards/CustomCards";
 import { getCards } from "../../../api/getCards";
+import { PUBLIC_KEY } from "../../../config";
 
 interface SavedCardPaymentProps {
   payload: string;
@@ -16,9 +17,6 @@ interface SavedCardPaymentProps {
   onCardSelect?: (cardId: number | null) => void;
   hideButton?: boolean;
 }
-
-// This needs to be updated to the actual customer ID
-const CUSTOMER_ID = 62246;
 
 export function SavedCardPayment(props: SavedCardPaymentProps): JSX.Element {
   const [selectedCardId, setSelectedCardId] = createSignal<number | null>(null);

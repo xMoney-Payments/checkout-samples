@@ -2,7 +2,7 @@ import { CardHolderVerificationResult } from "../checkout.types";
 import { XMoneyBaseConfig, XMoneyBaseInstance } from "./sdk-base.types";
 
 /**
- * Configuration options for initializing and customizing the xMoney payment form.
+ * Configuration options for initializing and customizing the xMoney Payment Card element.
  */
 export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
   card?: {

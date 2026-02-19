@@ -1,6 +1,6 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { PUBLIC_KEY } from "../../../constants";
+import { PUBLIC_KEY } from "../../../config";
 
 import { TransactionDetails } from "../../../types/checkout.types";
 import { XMoneyPaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";

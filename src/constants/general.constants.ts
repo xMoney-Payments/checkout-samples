@@ -1,8 +1,7 @@
-export const PUBLIC_KEY = "pk_test_10722";
-//export const PUBLIC_KEY = "pk_live_718";
-export const API_BASE = "https://localhost:3001";
 export const CURRENCY = "EUR";
 
+// This is a placeholder customer ID for demo purposes. In a real application, you would fetch this from your backend after authenticating the user.
+export const CUSTOMER_ID = 62246;
 export const INITIAL_FORM_DATA = {
   firstName: "customer_firstName",
   lastName: "customer_lastName",

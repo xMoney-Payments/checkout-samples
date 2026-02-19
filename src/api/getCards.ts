@@ -1,4 +1,4 @@
-import { API_BASE } from "../constants";
+import { API_BASE } from "../config";
 import { Card } from "../types/checkout.types";
 
 export async function getCards(customerId: number): Promise<any> {

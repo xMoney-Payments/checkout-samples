@@ -1,6 +1,7 @@
 import { createSignal, onMount, onCleanup, createEffect } from "solid-js";
 import { createPaymentIntent } from "../../../api";
-import { CURRENCY, INITIAL_FORM_DATA, PUBLIC_KEY } from "../../../constants";
+import { CURRENCY, INITIAL_FORM_DATA } from "../../../constants";
+import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
 import { XMoneyPaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
 import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";

@@ -1,6 +1,6 @@
 import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
-import { PUBLIC_KEY } from "../../../constants";
+import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
 import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
 

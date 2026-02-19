@@ -1,7 +1,8 @@
 import { createSignal, onMount, Show } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
 import { createPaymentIntent } from "../../api";
-import { CURRENCY, INITIAL_FORM_DATA, PUBLIC_KEY } from "../../constants";
+import { CURRENCY, INITIAL_FORM_DATA } from "../../constants";
+import { PUBLIC_KEY } from "../../config";
 import type { TransactionDetails } from "../../types/checkout.types";
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import { ErrorAlert } from "../../components/ui/ErrorAlert/ErrorAlert";

@@ -1,7 +1,7 @@
 import { TransactionDetails } from "../checkout.types";
 
 /**
- * Configuration options for initializing and customizing the xMoney payment form.
+ * Base configuration options shared by all xMoney SDK methods.
  */
 export interface XMoneyBaseConfig {
   /**

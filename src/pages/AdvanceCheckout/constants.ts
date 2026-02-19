@@ -1,5 +1,4 @@
 import type { PizzaItem } from "./types";
-import type { SavedCardData } from "./types";
 
 export const DELIVERY_THRESHOLD = 30;
 export const DELIVERY_FEE = 3.99;

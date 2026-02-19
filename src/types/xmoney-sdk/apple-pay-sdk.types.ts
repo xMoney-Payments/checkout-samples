@@ -1,4 +1,3 @@
-import { TransactionDetails } from "../../types/checkout.types";
 import { XMoneyBaseConfig, XMoneyBaseInstance } from "./sdk-base.types";
 
 /**

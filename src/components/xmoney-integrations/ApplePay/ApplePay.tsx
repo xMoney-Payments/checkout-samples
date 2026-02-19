@@ -1,8 +1,8 @@
 import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
-import { PUBLIC_KEY } from "../../../constants";
 import { TransactionDetails } from "../../../types/checkout.types";
 import { XMoneyApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
+import { PUBLIC_KEY } from "../../../config";
 
 interface ApplePayProps {
   payload: string;
