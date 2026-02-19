@@ -31,7 +31,7 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
         },
         cardHolderVerification: {
           name: {
-            firstName: "",
+            firstName: "Jon",
             middleName: "",
             lastName: "",
           },

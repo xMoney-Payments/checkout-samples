@@ -18,6 +18,16 @@ interface SavedCardPaymentProps {
   checksum: string;
   onPaymentComplete?: (result: any) => void;
   onError?: (error: any) => void;
+  onReady?: (controls: {
+    pay: (cardId: number) => void;
+    updateOrder: (order: { orderPayload: string; orderChecksum: string }) => void;
+  }) => void;
+  onCardSelect?: (cardId: number) => void;
+  hideButton?: boolean;
+  customCardRenderer?: (props: {
+    selectedId: number;
+    onSelect: (id: number) => void;
+  }) => JSX.Element;
 }
 
 export function SavedCardPayment(props: SavedCardPaymentProps): JSX.Element {
@@ -38,7 +48,19 @@ export function SavedCardPayment(props: SavedCardPaymentProps): JSX.Element {
       orderChecksum: props.checksum,
       orderPayload: props.payload,
       publicKey: PUBLIC_KEY,
-      onReady: () => setIsReady(true),
+      onReady: () => {
+        setIsReady(true);
+        props.onReady?.({
+          pay: (cardId: number) => {
+            if (!savedCardPaymentInstance) return;
+            setIsPending(true);
+            savedCardPaymentInstance.pay({ cardId });
+          },
+          updateOrder: (order) => {
+            savedCardPaymentInstance?.updateOrder(order);
+          },
+        });
+      },
       onError: (err) => {
         console.error("❌ Card elements error", err);
         props.onError?.(err);
@@ -62,21 +84,38 @@ export function SavedCardPayment(props: SavedCardPaymentProps): JSX.Element {
           display: isReady() ? "block" : "none",
         }}
       >
-        <CustomCards
-          selectedId={selectedCardId()}
-          onSelect={setSelectedCardId}
-        />
-        <button
-          class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
-          disabled={!selectedCardId() || isPending()}
-          onClick={() => {
-            if (!savedCardPaymentInstance || !selectedCardId()) return;
-            setIsPending(true);
-            savedCardPaymentInstance.pay({ cardId: selectedCardId()! });
-          }}
-        >
-          {isPending() ? "Processing..." : "Pay with Selected Card"}
-        </button>
+        {props.customCardRenderer ? (
+          props.customCardRenderer({
+            selectedId: selectedCardId(),
+            onSelect: (id: number) => {
+              setSelectedCardId(id);
+              props.onCardSelect?.(id);
+            },
+          })
+        ) : (
+          <CustomCards
+            selectedId={selectedCardId()}
+            onSelect={(value) => {
+              setSelectedCardId(value);
+              const resolved =
+                typeof value === "function" ? value(selectedCardId()) : value;
+              props.onCardSelect?.(resolved);
+            }}
+          />
+        )}
+        <Show when={!props.hideButton}>
+          <button
+            class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
+            disabled={!selectedCardId() || isPending()}
+            onClick={() => {
+              if (!savedCardPaymentInstance || !selectedCardId()) return;
+              setIsPending(true);
+              savedCardPaymentInstance.pay({ cardId: selectedCardId()! });
+            }}
+          >
+            {isPending() ? "Processing..." : "Pay with Selected Card"}
+          </button>
+        </Show>
       </div>
     </div>
   );

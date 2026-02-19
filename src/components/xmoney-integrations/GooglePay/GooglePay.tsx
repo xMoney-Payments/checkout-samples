@@ -1,4 +1,4 @@
-import { createSignal, onMount, onCleanup, JSX } from "solid-js";
+import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
 import { PUBLIC_KEY } from "../../../constants";
 import { TransactionDetails } from "../../../types/checkout.types";
@@ -7,6 +7,7 @@ import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sd
 interface GooglePayProps {
   payload: string;
   checksum: string;
+  onReady?: (instance: XMoneyGooglePayInstance | null) => void;
   onPaymentComplete?: (result: any) => void;
   onError?: (error: any) => void;
 }
@@ -17,6 +18,8 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `google-pay-${Math.random().toString(36).substring(2, 15)}`;
   let googlePayInstance: XMoneyGooglePayInstance | undefined;
+  let initialPayload: string | null = null;
+  console.log("GooglePay props", props.payload);
 
   onMount(async () => {
     try {
@@ -26,6 +29,7 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
         return;
       }
 
+      initialPayload = props.payload;
       googlePayInstance = await window.XMoney.googlePay({
         container: containerId,
         orderChecksum: props.checksum,
@@ -34,6 +38,7 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
         onReady: () => {
           setIsReady(true);
           setIsLoading(false);
+          props.onReady?.(googlePayInstance!);
         },
         onError: (err) => {
           console.error("❌ Google Pay error", err);
@@ -56,8 +61,21 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
     }
   });
 
+  createEffect(() => {
+    const payload = props.payload;
+    const checksum = props.checksum;
+    if (!googlePayInstance || !initialPayload || payload === initialPayload)
+      return;
+    initialPayload = payload;
+    googlePayInstance.updateOrder({
+      orderPayload: payload,
+      orderChecksum: checksum,
+    });
+  });
+
   onCleanup(() => {
     googlePayInstance?.destroy?.();
+    props.onReady?.(null);
   });
 
   return (

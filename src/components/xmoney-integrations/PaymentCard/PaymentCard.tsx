@@ -11,6 +11,9 @@ interface PaymentCardProps {
   checksum: string;
   onPaymentComplete?: (result: any) => void;
   onError?: (error: any) => void;
+  onReady?: (instance: XMoneyPaymentCardInstance) => void;
+  onPaymentProcessing?: (isProcessing: boolean) => void;
+  hideSubmitButton?: boolean;
 }
 
 export function PaymentCard(props: PaymentCardProps): JSX.Element {
@@ -30,32 +33,39 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
       container: containerId,
       card: {
         savedCards: {
-          enabled: true,
-          optInVisible: false,
+          enabled: false,
+          optInVisible: true,
         },
-        cardHolderVerification: {
-          name: {
-            firstName: "",
-            middleName: "",
-            lastName: "",
-          },
-          onCardHolderVerification: (verificationResult) => {
-            console.log("Card holder verification result:", verificationResult);
-            return true;
-          },
+        submitButton: {
+          visible: !props.hideSubmitButton,
         },
+        // cardHolderVerification: {
+        //   name: {
+        //     firstName: "John",
+        //     middleName: "Middle",
+        //     lastName: "Doe",
+        //   },
+        //   onCardHolderVerification: (verificationResult) => {
+        //     console.log("Card holder verification result:", verificationResult);
+        //     return true;
+        //   },
+        // },
       },
 
       orderChecksum: props.checksum,
       orderPayload: props.payload,
       publicKey: PUBLIC_KEY,
 
-      onReady: () => setIsReady(true),
+      onReady: () => {
+        setIsReady(true);
+        props.onReady?.(paymentCardInstance!);
+      },
       onError: (err) => {
         props.onError?.(err);
       },
       onPaymentProcessing: (isProcessing) => {
         console.log("PaymentCard payment processing:", isProcessing);
+        props.onPaymentProcessing?.(isProcessing);
       },
       onPaymentComplete: (result: TransactionDetails) => {
         props.onPaymentComplete?.(result);
