@@ -1,7 +1,17 @@
 import { Show } from "solid-js";
-import type { CheckoutAccordionItemProps } from "../types";
+import type { JSX } from "solid-js/jsx-runtime";
 
-export function CheckoutAccordionItem(props: CheckoutAccordionItemProps) {
+export interface AccordionItemProps {
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: JSX.Element;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: JSX.Element;
+}
+
+export function AccordionItem(props: AccordionItemProps) {
   return (
     <div
       class={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${

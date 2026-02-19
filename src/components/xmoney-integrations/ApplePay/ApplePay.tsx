@@ -8,13 +8,12 @@ interface ApplePayProps {
   payload: string;
   checksum: string;
   onReady?: (instance: XMoneyApplePayInstance | null) => void;
-  onPaymentComplete?: (result: any) => void;
+  onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
 }
 
 export function ApplePay(props: ApplePayProps): JSX.Element {
   const [isLoading, setIsLoading] = createSignal(true);
-  const [error, setError] = createSignal<string | null>(null);
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `apple-pay-${Math.random().toString(36).substring(2, 15)}`;
   let applePayInstance: XMoneyApplePayInstance;
@@ -23,7 +22,6 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
   onMount(async () => {
     try {
       if (!window.XMoney?.applePay) {
-        setError("Apple Pay SDK is not loaded");
         setIsLoading(false);
         return;
       }
@@ -42,7 +40,6 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
         },
         onError: (err) => {
           console.error("❌ Apple Pay error", err);
-          setError("Failed to initialize Apple Pay");
           setIsLoading(false);
           props.onError?.(err);
         },
@@ -55,7 +52,6 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
       });
     } catch (err) {
       console.error("❌ Apple Pay initialization error", err);
-      setError("Failed to initialize Apple Pay");
       setIsLoading(false);
       props.onError?.(err);
     }
@@ -83,15 +79,6 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
       {isLoading() && (
         <div>
           <div class="w-full h-6 rounded-md bg-[linear-gradient(90deg,var(--color-neutral-100),var(--color-neutral-200),var(--color-neutral-100))] bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]" />
-        </div>
-      )}
-      {error() && (
-        <div class="flex flex-col items-center gap-3 p-10 text-center">
-          <div class="text-5xl">⚠️</div>
-          <p>{error()}</p>
-          <p class="!text-sm !font-normal text-[color:var(--color-neutral-500)]">
-            Apple Pay requires Safari on Mac or iOS device
-          </p>
         </div>
       )}
       <div

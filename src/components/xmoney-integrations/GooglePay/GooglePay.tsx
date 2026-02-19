@@ -8,23 +8,20 @@ interface GooglePayProps {
   payload: string;
   checksum: string;
   onReady?: (instance: XMoneyGooglePayInstance | null) => void;
-  onPaymentComplete?: (result: any) => void;
+  onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
 }
 
 export function GooglePay(props: GooglePayProps): JSX.Element {
   const [isLoading, setIsLoading] = createSignal(true);
-  const [error, setError] = createSignal<string | null>(null);
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `google-pay-${Math.random().toString(36).substring(2, 15)}`;
   let googlePayInstance: XMoneyGooglePayInstance | undefined;
   let initialPayload: string | null = null;
-  console.log("GooglePay props", props.payload);
 
   onMount(async () => {
     try {
       if (!window.XMoney?.googlePay) {
-        setError("Google Pay SDK is not loaded");
         setIsLoading(false);
         return;
       }
@@ -42,7 +39,6 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
         },
         onError: (err) => {
           console.error("❌ Google Pay error", err);
-          setError("Failed to initialize Google Pay");
           setIsLoading(false);
           props.onError?.(err);
         },
@@ -55,7 +51,6 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
       });
     } catch (err) {
       console.error("❌ Google Pay initialization error", err);
-      setError("Failed to initialize Google Pay");
       setIsLoading(false);
       props.onError?.(err);
     }
@@ -83,15 +78,6 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
       {isLoading() && (
         <div>
           <div class="w-full h-6 rounded-md bg-[linear-gradient(90deg,var(--color-neutral-100),var(--color-neutral-200),var(--color-neutral-100))] bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]" />
-        </div>
-      )}
-      {error() && (
-        <div class="flex flex-col items-center gap-3 p-10 text-center">
-          <div class="text-5xl">⚠️</div>
-          <p>{error()}</p>
-          <p class="!text-sm !font-normal text-[color:var(--color-neutral-500)]">
-            Google Pay requires Chrome browser or compatible device
-          </p>
         </div>
       )}
       <div

@@ -9,9 +9,9 @@ import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";
 interface PaymentCardProps {
   payload: string;
   checksum: string;
-  onPaymentComplete?: (result: any) => void;
+  onReady?: (instance: XMoneyPaymentCardInstance | null) => void;
+  onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
-  onReady?: (instance: XMoneyPaymentCardInstance) => void;
   onPaymentProcessing?: (isProcessing: boolean) => void;
   hideSubmitButton?: boolean;
 }
@@ -39,17 +39,6 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
         submitButton: {
           visible: !props.hideSubmitButton,
         },
-        // cardHolderVerification: {
-        //   name: {
-        //     firstName: "John",
-        //     middleName: "Middle",
-        //     lastName: "Doe",
-        //   },
-        //   onCardHolderVerification: (verificationResult) => {
-        //     console.log("Card holder verification result:", verificationResult);
-        //     return true;
-        //   },
-        // },
       },
 
       orderChecksum: props.checksum,
@@ -75,10 +64,11 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
 
   onCleanup(() => {
     paymentCardInstance?.destroy?.();
+    props.onReady?.(null);
   });
 
   return (
-    <div class="">
+    <div>
       {(!isReady() || isPending) && (
         <LoadingSpinner size="md" message="Loading payment card elements..." />
       )}

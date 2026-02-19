@@ -55,9 +55,6 @@ export interface XMoneyBaseConfig {
    * Callback executed when the payment is completed.
    *
    * @param data - Payment completion response data.
-   *
-   * @remarks
-   * This callback will **not** be triggered if `enableBackgroundRefresh` is `false`.
    */
   onPaymentComplete?: (data: TransactionDetails) => void;
   /**

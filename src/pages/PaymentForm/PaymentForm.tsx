@@ -5,8 +5,10 @@ import { createPaymentIntent } from "../../api";
 import { XMoneyPaymentForm } from "../../components/xmoney-integrations/PaymentForm/PaymentForm";
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner/LoadingSpinner";
 import { ErrorAlert } from "../../components/ui/ErrorAlert/ErrorAlert";
-import { PageContainer } from "../../components/ui/PageContainer/PageContainer";
-import { TransactionResult } from "../../components/ui/TransactionResult/TransactionResult";
+import {
+  SectionCard,
+  PaymentMethodCardIcon,
+} from "../../components/ui/SectionCard/SectionCard";
 
 import { CURRENCY, PUBLIC_KEY } from "../../constants";
 
@@ -14,6 +16,8 @@ import { CustomerInformation } from "./payments.types";
 import { XMoneyPaymentFormInstance } from "../../types/xmoney-sdk/payment-form-sdk.types";
 import { TransactionDetails } from "../../types/checkout.types";
 import { PaymentFormConfig } from "./components/PaymentFormConfig/PaymentFormConfig";
+import { PaymentSuccessCard } from "../../components/ui/PaymentSuccessCard/PaymentSuccessCard";
+import { SecureInfo } from "../../components/ui/SecureInfo/SecureInfo";
 
 const initialFormData: CustomerInformation = {
   firstName: "customer_firstName",
@@ -95,39 +99,35 @@ export function Payments(): JSX.Element {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function handleRetry() {
-    setTransactionResult(null);
-    window.location.reload();
-  }
-
   onMount(() => {
     initializePayment();
   });
 
   return (
-    <PageContainer>
-      <Show when={transactionResult()}>
-        <TransactionResult
-          result={transactionResult()!}
-          onRetry={handleRetry}
-        />
-      </Show>
+    <div class="min-h-screen">
+      <div class="max-w-2xl mx-auto px-6">
+        <Show when={transactionResult()}>
+          <PaymentSuccessCard result={transactionResult()!} />
+        </Show>
 
-      <Show when={error()}>
-        <ErrorAlert
-          title="Error"
-          message={error()!}
-          onDismiss={() => setError(null)}
-          variant="banner"
-        />
-      </Show>
+        <Show when={error()}>
+          <ErrorAlert
+            title="Error"
+            message={error()!}
+            onDismiss={() => setError(null)}
+            variant="banner"
+          />
+        </Show>
+      </div>
 
       <Show when={isInitializing()}>
-        <LoadingSpinner size="lg" message="Initializing payment form..." />
+        <div class="max-w-2xl mx-auto px-6 py-12">
+          <LoadingSpinner size="lg" message="Initializing payment form..." />
+        </div>
       </Show>
 
       <Show when={!isInitializing() && !transactionResult() && order()}>
-        <div class="max-w-2xl mx-auto p-6 rounded-2xl border bg-white shadow-[0_18px_40px_rgba(22,20,26,0.08)] border-[color:var(--color-neutral-100)]">
+        <div class="max-w-2xl mx-auto px-6 pb-12 mt-6">
           <PaymentFormConfig
             paymentFormInstance={paymentFormInstance()}
             amount={amount()}
@@ -140,25 +140,33 @@ export function Payments(): JSX.Element {
             }
             disabled={isUpdatingOrder()}
           />
-
-          <div
-            class="pt-6 mt-6 border-t border-[color:var(--color-neutral-100)]"
-            style={{
-              opacity: isUpdatingOrder() ? "0.5" : "1",
-              "pointer-events": isUpdatingOrder() ? "none" : "auto",
-              transition: "opacity 0.2s",
-            }}
+          <SectionCard
+            icon={<PaymentMethodCardIcon />}
+            iconBg="bg-[var(--color-blue-100)]"
+            headerBg="bg-gradient-to-r from-[var(--color-blue-50)] to-white"
+            title="Payment Form"
+            subtitle="Enter your payment details to complete the order"
           >
-            <XMoneyPaymentForm
-              orderPayload={order()!.payload}
-              orderChecksum={order()!.checksum}
-              onReady={setPaymentFormInstance}
-              onPaymentComplete={handlePaymentComplete}
-              onError={(err) => setError(String(err))}
-            />
-          </div>
+            <div
+              class="border-t border-[color:var(--color-neutral-100)] pt-5"
+              style={{
+                opacity: isUpdatingOrder() ? "0.5" : "1",
+                "pointer-events": isUpdatingOrder() ? "none" : "auto",
+                transition: "opacity 0.2s",
+              }}
+            >
+              <XMoneyPaymentForm
+                orderPayload={order()!.payload}
+                orderChecksum={order()!.checksum}
+                onReady={setPaymentFormInstance}
+                onPaymentComplete={handlePaymentComplete}
+                onError={(err) => setError(String(err))}
+              />
+            </div>
+          </SectionCard>
+          <SecureInfo />
         </div>
       </Show>
-    </PageContainer>
+    </div>
   );
 }

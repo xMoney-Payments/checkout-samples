@@ -73,7 +73,7 @@ export const API_BASE = "https://your-api-endpoint.com";
 
 ### Running the App
 
-```bash
+````bash
 # Development mode
 npm run dev
 # or
@@ -117,7 +117,7 @@ Before using any SDK methods, you must load the xMoney SDK script in your HTML:
     <script src="/src/main.js" type="module"></script>
   </body>
 </html>
-```
+````
 
 ### Environment-specific SDK URLs
 
@@ -296,7 +296,6 @@ const applePayInstance = await window.XMoney.applePay({
 
   options: {
     locale: "en-US",
-    enableBackgroundRefresh: true,
     appearance: {
       style: "black", // "white" | "black" | "white-outline"
       radius: 12,
@@ -337,7 +336,6 @@ const googlePayInstance = await window.XMoney.googlePay({
 
   options: {
     locale: "en-US",
-    enableBackgroundRefresh: true,
     appearance: {
       color: "black", // "white" | "black"
       radius: 12,
@@ -492,7 +490,7 @@ appearance: {
 
 ## 📁 Project Structure
 
-```
+````
 checkout-samples/
 ├── src/
 │   │   │   ├── ApplePay/            # Apple Pay integration
@@ -530,7 +528,7 @@ interface XMoneyBaseConfig {
   onError?: (err: Error) => void; // Called on errors
   onPaymentComplete?: (data) => void; // Called on successful payment
 }
-```
+````
 
 ### Payment Form Specific Options
 
@@ -541,7 +539,6 @@ interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
     enableSavedCards?: boolean;
     displaySaveCardOption?: boolean;
     displaySubmitButton?: boolean;
-    enableBackgroundRefresh?: boolean;
     cardHolderVerification?: {
       name: { firstName: string; middleName: string; lastName: string };
       email: string;

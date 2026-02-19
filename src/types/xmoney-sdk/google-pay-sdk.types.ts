@@ -15,12 +15,6 @@ export interface XMoneyGooglePayConfig extends XMoneyBaseConfig {
      */
     locale?: "en-US" | "el-GR" | "ro-RO";
     /**
-     * Enables background data refresh for the Google Pay.
-     *
-     * @defaultValue `true`
-     */
-    enableBackgroundRefresh?: boolean;
-    /**
      * Appearance customization options.
      */
     appearance?: {

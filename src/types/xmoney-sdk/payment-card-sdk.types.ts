@@ -12,6 +12,9 @@ export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
      * @defaultValue `"onChange"`
      */
     validationMode?: "onSubmit" | "onChange" | "onBlur" | "onTouched";
+    /**
+     * Options for displaying saved cards for returning users.
+     */
     savedCards?: {
       /**
        * Enables the display of saved cards for returning users.

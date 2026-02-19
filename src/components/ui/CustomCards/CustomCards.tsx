@@ -1,146 +1,181 @@
-/** @jsxImportSource solid-js */
-import { For, Setter, createEffect, createSignal } from "solid-js";
-import { JSX } from "solid-js/jsx-runtime";
-
-export interface SavedCard {
-  id: number;
-  customerId: number;
-  type: string;
-  cardNumber: string;
-  expiryMonth: string;
-  expiryYear: string;
-  nameOnCard: string;
-  cardHolderCountry: string;
-}
-
-const cards: SavedCard[] = [
-  {
-    id: 140478,
-    customerId: 62246,
-    type: "visa",
-    cardNumber: "411111******1111",
-    expiryMonth: "12",
-    expiryYear: "2028",
-    nameOnCard: "John Doe",
-    cardHolderCountry: "US",
-  },
-  {
-    id: 140522,
-    customerId: 62246,
-    type: "mastercard",
-    cardNumber: "555555******5599",
-    expiryMonth: "06",
-    expiryYear: "2029",
-    nameOnCard: "Jane Smith",
-    cardHolderCountry: "UK",
-  },
-];
+import { For, Show } from "solid-js";
+import { Card } from "../../../types/checkout.types";
 
 interface CustomCardsProps {
   selectedId: number | null;
-  onSelect: Setter<number>;
+  onSelect: (id: number | null) => void;
+  cards?: Card[];
 }
 
-function CardBrandIcon(props: { type: string }): JSX.Element {
-  const type = props.type.toLowerCase();
-
-  if (type === "mastercard") {
-    return (
-      <svg class="w-12 h-8" viewBox="0 0 48 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="10" fill="#EB001B" />
-        <circle cx="32" cy="16" r="10" fill="#F79E1B" />
-        <path d="M24 6a12 12 0 0 1 0 20 12 12 0 0 1 0-20Z" fill="#FF5F00" />
-      </svg>
-    );
-  }
-
+export function CustomCards(props: CustomCardsProps) {
   return (
-    <svg class="w-12 h-8" viewBox="0 0 48 32" aria-hidden="true">
-      <rect width="48" height="32" rx="4" fill="#1A1F71" />
-      <text
-        x="24"
-        y="21"
-        text-anchor="middle"
-        font-size="11"
-        font-weight="bold"
-        fill="#fff"
-      >
-        VISA
-      </text>
-    </svg>
-  );
-}
-
-export function CustomCards(props: CustomCardsProps): JSX.Element {
-  return (
-    <section class="flex flex-col gap-2" aria-label="Saved cards">
-      <For each={cards}>
-        {(card) => {
-          return (
-            <button
-              type="button"
-              class={`w-full rounded-xl p-4 flex items-center gap-4 cursor-pointer transition-all duration-200 text-left border-2 ${
-                props.selectedId === card.id
-                  ? "bg-[var(--color-primary-25)] border-[var(--color-primary-400)] shadow-lg"
-                  : "bg-white border-[var(--color-neutral-100)] hover:border-[var(--color-neutral-200)] hover:shadow-md"
-              }`}
-              onClick={() => {
-                props.onSelect(card.id);
-              }}
+    <Show
+      when={props.cards?.length && props.cards?.length > 0}
+      fallback={
+        <div class="flex flex-col items-center justify-center gap-3 py-10 px-6 rounded-2xl border border-dashed border-white/10 bg-white/3 text-center">
+          <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+            <svg
+              class="w-6 h-6 text-black/30"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
             >
-              <div class="flex-shrink-0">
-                <CardBrandIcon type={card.type} />
-              </div>
+              <rect
+                x="2"
+                y="5"
+                width="20"
+                height="14"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="1.5"
+                fill="none"
+              />
+              <path d="M2 10h20" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </div>
+          <p class="m-0 text-sm font-medium text-balck/40">No saved cards</p>
+          <p class="m-0 text-xs text-black/25">
+            You don't have any saved cards yet.
+          </p>
+        </div>
+      }
+    >
+      <div class="flex gap-3 max-h-[500px]  mx-auto overflow-y-auto">
+        <For each={props.cards}>
+          {(card) => {
+            const isSelected = () => props.selectedId === card.id;
+            const isVisa = card.type.toLowerCase() === "visa";
 
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2">
-                  <span class="font-mono text-base font-semibold text-[var(--color-neutral-900)]">
-                    {card.cardNumber}
-                  </span>
-                </div>
-                <div class="text-sm text-[var(--color-neutral-500)] mt-1">
-                  {card.nameOnCard}
-                </div>
-              </div>
-
-              <div class="flex-shrink-0 text-right">
-                <div class="text-xs text-[var(--color-neutral-400)]">
-                  Expires
-                </div>
-                <div class="text-sm font-semibold text-[var(--color-neutral-800)]">
-                  {card.expiryMonth}/{card.expiryYear.slice(-2)}
-                </div>
-              </div>
-
-              <div class="flex-shrink-0">
+            return (
+              <button
+                type="button"
+                class={`relative w-full rounded-2xl p-0 cursor-pointer transition-all duration-300 text-left border-0 outline-none group ${
+                  isSelected()
+                    ? "shadow-[0_8px_24px_rgba(124,77,255,0.18)]"
+                    : "shadow-sm hover:shadow-md"
+                }`}
+                onClick={() => props.onSelect(card.id)}
+              >
                 <div
-                  class={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                    props.selectedId === card.id
-                      ? "border-[var(--color-primary-500)] bg-[var(--color-primary-500)]"
-                      : "border-[var(--color-neutral-200)]"
+                  class={`relative overflow-hidden rounded-2xl p-5 transition-all duration-300 ${
+                    isSelected()
+                      ? isVisa
+                        ? "bg-gradient-to-br from-[#1A1F71] via-[#2a2f91] to-[#4a4fb1]"
+                        : "bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]"
+                      : isVisa
+                        ? "bg-gradient-to-br from-[#2a2f71] via-[#3a3f91] to-[#5a5fb1] opacity-70 group-hover:opacity-90"
+                        : "bg-gradient-to-br from-[#2a2a3e] via-[#26314e] to-[#1f4470] opacity-70 group-hover:opacity-90"
                   }`}
                 >
-                  {props.selectedId === card.id && (
-                    <svg
-                      class="w-3 h-3 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="3"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
+                  <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5" />
+                  <div class="absolute -bottom-8 -left-4 w-20 h-20 rounded-full bg-white/5" />
+
+                  <div
+                    class={`absolute top-3 right-3 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                      isSelected()
+                        ? "border-white bg-white"
+                        : "border-white/40 bg-transparent"
+                    }`}
+                  >
+                    <Show when={isSelected()}>
+                      <svg
+                        class="w-3 h-3 text-[var(--color-primary-600)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="3"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </Show>
+                  </div>
+
+                  <div class="flex items-center justify-between mb-5">
+                    {isVisa ? (
+                      <svg
+                        class="w-14 h-8"
+                        viewBox="0 0 48 32"
+                        aria-hidden="true"
+                      >
+                        <text
+                          x="2"
+                          y="22"
+                          font-size="16"
+                          font-weight="bold"
+                          font-style="italic"
+                          fill="#fff"
+                        >
+                          VISA
+                        </text>
+                      </svg>
+                    ) : (
+                      <svg
+                        class="w-12 h-8"
+                        viewBox="0 0 48 32"
+                        aria-hidden="true"
+                      >
+                        <circle
+                          cx="16"
+                          cy="16"
+                          r="10"
+                          fill="#EB001B"
+                          opacity="0.9"
+                        />
+                        <circle
+                          cx="32"
+                          cy="16"
+                          r="10"
+                          fill="#F79E1B"
+                          opacity="0.9"
+                        />
+                        <path
+                          d="M24 6a12 12 0 0 1 0 20 12 12 0 0 1 0-20Z"
+                          fill="#FF5F00"
+                          opacity="0.9"
+                        />
+                      </svg>
+                    )}
+                    <div class="flex gap-1">
+                      <div class="w-6 h-4 rounded-sm bg-white/15" />
+                      <div class="w-6 h-4 rounded-sm bg-white/10" />
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <p class="m-0 font-mono text-base font-medium text-white/95 tracking-[0.15em]">
+                      {card.cardNumber}
+                    </p>
+                  </div>
+
+                  <div class="flex items-end justify-between">
+                    <div>
+                      <p class="m-0 text-[10px] uppercase tracking-wider text-white/40 mb-0.5">
+                        Card Holder
+                      </p>
+                      <p class="m-0 text-xs font-semibold text-white/90">
+                        {card.nameOnCard}
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <p class="m-0 text-[10px] uppercase tracking-wider text-white/40 mb-0.5">
+                        Expires
+                      </p>
+                      <p class="m-0 text-xs font-semibold text-white/90">
+                        {card.expiryMonth}/{card.expiryYear.slice(-2)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </button>
-          );
-        }}
-      </For>
-    </section>
+              </button>
+            );
+          }}
+        </For>
+      </div>
+    </Show>
   );
 }

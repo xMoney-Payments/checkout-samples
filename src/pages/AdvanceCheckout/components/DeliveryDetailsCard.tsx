@@ -1,4 +1,5 @@
 import { createSignal } from "solid-js";
+import { SectionCard } from "../../../components/ui/SectionCard/SectionCard";
 
 interface DeliveryForm {
   firstName: string;
@@ -9,6 +10,23 @@ interface DeliveryForm {
   city: string;
   zipCode: string;
   notes: string;
+}
+
+function DeliveryPinIcon() {
+  return (
+    <svg
+      class="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--color-primary-600)"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
 }
 
 export function DeliveryDetailsCard() {
@@ -27,36 +45,13 @@ export function DeliveryDetailsCard() {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div class="bg-white rounded-2xl border border-[var(--color-neutral-100)] shadow-[0_4px_24px_rgba(22,20,26,0.06)] overflow-hidden">
-      {/* Header */}
-      <div class="px-6 py-5 border-b border-[var(--color-neutral-100)] bg-gradient-to-r from-[var(--color-primary-25)] to-white">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-[var(--color-primary-100)] flex items-center justify-center">
-            <svg
-              class="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--color-primary-600)"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="m-0 text-base font-bold text-[var(--color-neutral-900)]">
-              Delivery Details
-            </h3>
-            <p class="m-0 text-xs text-[var(--color-neutral-400)] mt-0.5">
-              Where should we deliver your pizza?
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Form */}
+    <SectionCard
+      icon={<DeliveryPinIcon />}
+      iconBg="bg-[var(--color-primary-100)]"
+      headerBg="bg-gradient-to-r from-[var(--color-primary-25)] to-white"
+      title="Delivery Details"
+      subtitle="Where should we deliver your pizza?"
+    >
       <div class="p-6 flex flex-col gap-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="flex flex-col gap-1.5">
@@ -188,6 +183,6 @@ export function DeliveryDetailsCard() {
           </div>
         </div>
       </div>
-    </div>
+    </SectionCard>
   );
 }

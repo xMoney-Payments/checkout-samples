@@ -6,49 +6,52 @@ import { XMoneyPaymentCardInstance } from "../../../types/xmoney-sdk/payment-car
 import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
 import { XMoneyApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
 
-import type { CheckoutState } from "../types";
-import type { OrderItem, IntentResult, PaymentMethodType } from "../types";
-import type { SavedCardControls } from "../types";
-import { PIZZA_MENU, DEFAULT_SAVED_CARD_ID } from "../constants";
+import type { CheckoutState, OrderItem, PaymentMethodType } from "../types";
+import { PIZZA_MENU, DELIVERY_THRESHOLD, DELIVERY_FEE } from "../constants";
+import { XMoneySavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
 
-const DELIVERY_THRESHOLD = 30;
-const DELIVERY_FEE = 3.99;
 const UPDATE_ORDER_DEBOUNCE_MS = 500;
 
-function totalFromItems(items: OrderItem[]): number {
+function computeTotal(items: OrderItem[]): number {
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
   return subtotal + (subtotal >= DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE);
 }
 
 export function useCheckoutState(): CheckoutState {
-  const [intentResult, setIntentResult] = createSignal<IntentResult | null>(null);
+  const [intentResult, setIntentResult] = createSignal<{
+    payload: string;
+    checksum: string;
+  } | null>(null);
   const [isLoading, setIsLoading] = createSignal(true);
   const [error, setError] = createSignal<string | null>(null);
   const [paymentResult, setPaymentResult] =
     createSignal<TransactionDetails | null>(null);
   const [isGooglePaySupported, setIsGooglePaySupported] = createSignal(false);
   const [isApplePaySupported, setIsApplePaySupported] = createSignal(false);
-  const [activeMethod, setActiveMethodSignal] =
+  const [activeMethod, setActiveMethod] =
     createSignal<PaymentMethodType>("card");
   const [isProcessing, setIsProcessing] = createSignal(false);
-  const [paymentCardInstance, setPaymentCardInstance] =
-    createSignal<XMoneyPaymentCardInstance | null>(null);
-  const [savedCardPaymentInstance, setSavedCardPaymentInstance] =
-    createSignal<SavedCardControls | null>(null);
-  const [googlePayInstance, setGooglePayInstance] =
-    createSignal<XMoneyGooglePayInstance | null>(null);
-  const [applePayInstance, setApplePayInstance] =
-    createSignal<XMoneyApplePayInstance | null>(null);
-  const [selectedSavedCardId, setSelectedSavedCardId] =
-    createSignal(DEFAULT_SAVED_CARD_ID);
+  const [isUpdatingOrder, setIsUpdatingOrder] = createSignal(false);
   const [isCardReady, setIsCardReady] = createSignal(false);
   const [isSavedCardReady, setIsSavedCardReady] = createSignal(false);
-  const [isUpdatingOrder, setIsUpdatingOrder] = createSignal(false);
+  const [selectedSavedCardId, setSelectedSavedCardId] = createSignal<
+    number | null
+  >(null);
   const [orderItems, setOrderItems] = createSignal<OrderItem[]>(
     PIZZA_MENU.map((item) => ({ ...item, quantity: 1 })),
   );
 
-  const totalAmount = () => totalFromItems(orderItems());
+  const [paymentCardInstance, setPaymentCardInstance] =
+    createSignal<XMoneyPaymentCardInstance | null>(null);
+  const [savedCardPaymentInstance, setSavedCardPaymentInstance] =
+    createSignal<XMoneySavedCardPaymentInstance | null>(null);
+  const [googlePayInstance, setGooglePayInstance] =
+    createSignal<XMoneyGooglePayInstance | null>(null);
+  const [applePayInstance, setApplePayInstance] =
+    createSignal<XMoneyApplePayInstance | null>(null);
+
+  const totalAmount = () => computeTotal(orderItems());
+
   const isActiveMethodReady = () => {
     switch (activeMethod()) {
       case "card":
@@ -82,10 +85,24 @@ export function useCheckoutState(): CheckoutState {
     setError("Payment failed. Please try a different method or try again.");
   };
 
-  let initialAmount: number | null = null;
-  let updateOrderTimeout: ReturnType<typeof setTimeout> | null = null;
+  const handlePlaceOrder = () => {
+    paymentCardInstance()?.submit();
+  };
 
-  const runOrderUpdate = async (amount: number) => {
+  const handlePayWithSavedCard = () => {
+    debugger;
+    const instance = savedCardPaymentInstance();
+    const cardId = selectedSavedCardId();
+    if (instance && cardId) {
+      setIsProcessing(true);
+      instance.pay({ cardId });
+    }
+  };
+
+  let lastSyncedAmount: number | null = null;
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const updateAllInstances = async (amount: number) => {
     setIsUpdatingOrder(true);
     try {
       const intent = await createPaymentIntent({
@@ -94,12 +111,13 @@ export function useCheckoutState(): CheckoutState {
         currency: CURRENCY,
         publicKey: PUBLIC_KEY,
       });
-      const global = { payload: intent.payload, checksum: intent.checksum };
-      setIntentResult(global);
-      initialAmount = amount;
+      const result = { payload: intent.payload, checksum: intent.checksum };
+      setIntentResult(result);
+      lastSyncedAmount = amount;
+
       const order = {
-        orderPayload: global.payload,
-        orderChecksum: global.checksum,
+        orderPayload: result.payload,
+        orderChecksum: result.checksum,
       };
       paymentCardInstance()?.updateOrder(order);
       savedCardPaymentInstance()?.updateOrder(order);
@@ -113,37 +131,21 @@ export function useCheckoutState(): CheckoutState {
     }
   };
 
-  /** Flush any pending order update so intentResult() is current (e.g. before switching payment method). */
-  const flushOrderUpdate = (): Promise<void> => {
-    const amount = totalAmount();
-    if (initialAmount === null || amount === initialAmount) return Promise.resolve();
-    if (updateOrderTimeout) {
-      clearTimeout(updateOrderTimeout);
-      updateOrderTimeout = null;
-    }
-    initialAmount = amount;
-    return runOrderUpdate(amount);
-  };
-
-  const setActiveMethod = (newMethod: PaymentMethodType) => {
-    flushOrderUpdate().then(() => setActiveMethodSignal(newMethod));
-  };
-
   onMount(async () => {
     try {
-      const supported =
-        await window.XMoney.getPaymentMethodCapabilities();
+      const supported = await window.XMoney.getPaymentMethodCapabilities();
       setIsGooglePaySupported(supported.googlePay.supported);
       setIsApplePaySupported(supported.applePay.supported);
 
+      const amount = Math.round(totalAmount() * 100) / 100;
       const intent = await createPaymentIntent({
         ...INITIAL_FORM_DATA,
-        amount: Math.round(totalAmount() * 100) / 100,
+        amount,
         currency: CURRENCY,
         publicKey: PUBLIC_KEY,
       });
       setIntentResult({ payload: intent.payload, checksum: intent.checksum });
-      initialAmount = totalAmount();
+      lastSyncedAmount = totalAmount();
     } catch (err) {
       console.error("Failed to initialize payment:", err);
       setError("Failed to load payment methods. Please refresh and try again.");
@@ -154,17 +156,17 @@ export function useCheckoutState(): CheckoutState {
 
   createEffect(() => {
     const amount = totalAmount();
-    if (initialAmount === null || amount === initialAmount) return;
+    if (lastSyncedAmount === null || amount === lastSyncedAmount) return;
 
-    if (updateOrderTimeout) clearTimeout(updateOrderTimeout);
-    updateOrderTimeout = setTimeout(() => {
-      updateOrderTimeout = null;
-      runOrderUpdate(amount);
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      debounceTimer = null;
+      updateAllInstances(amount);
     }, UPDATE_ORDER_DEBOUNCE_MS);
   });
 
   onCleanup(() => {
-    if (updateOrderTimeout) clearTimeout(updateOrderTimeout);
+    if (debounceTimer) clearTimeout(debounceTimer);
   });
 
   return {
@@ -178,19 +180,17 @@ export function useCheckoutState(): CheckoutState {
     activeMethod,
     setActiveMethod,
     isProcessing,
+    setIsProcessing,
     orderItems,
     isUpdatingOrder,
-    paymentCardInstance,
-    savedCardPaymentInstance,
-    googlePayInstance,
-    applePayInstance,
-    selectedSavedCardId,
-    isCardReady,
-    isSavedCardReady,
     isActiveMethodReady,
     handleQuantityChange,
     handlePaymentComplete,
     handlePaymentError,
+    handlePlaceOrder,
+    handlePayWithSavedCard,
+    savedCardPaymentInstance,
+    selectedSavedCardId,
     setPaymentCardInstance,
     setSavedCardPaymentInstance,
     setGooglePayInstance,
@@ -198,6 +198,5 @@ export function useCheckoutState(): CheckoutState {
     setSelectedSavedCardId,
     setIsCardReady,
     setIsSavedCardReady,
-    setIsProcessing,
   };
 }

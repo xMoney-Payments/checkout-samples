@@ -29,17 +29,6 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
           enabled: true,
           optInVisible: false,
         },
-        cardHolderVerification: {
-          name: {
-            firstName: "Jon",
-            middleName: "",
-            lastName: "",
-          },
-          onCardHolderVerification: (verificationResult) => {
-            console.log("Card holder verification result:", verificationResult);
-            return true;
-          },
-        },
       },
       paymentMethods: {
         googlePay: { enabled: true },
@@ -73,7 +62,6 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
   onCleanup(() => {
     const instance = paymentFormInstance();
     if (instance) {
-      console.log("Destroying PaymentForm instance");
       instance.destroy();
       setPaymentFormInstance(null);
     }
