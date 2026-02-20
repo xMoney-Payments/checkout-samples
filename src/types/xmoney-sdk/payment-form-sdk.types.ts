@@ -35,7 +35,7 @@ export interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
        *
        * @defaultValue `true`
        */
-      enabled?: boolean;
+      visible?: boolean;
       /**
        * Type of the submit button.
        *
