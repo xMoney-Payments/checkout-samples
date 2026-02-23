@@ -1,7 +1,7 @@
 import { createSignal, onCleanup } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { XMoneyPaymentFormInstance } from "../../../../types/xmoney-sdk/payment-form-sdk.types";
-import { Locale, Theme } from "../../payments.types";
+import { Theme } from "../../payments.types";
 import { CURRENCY } from "../../../../constants";
 import {
   customThemeStylesBlue,
@@ -10,6 +10,7 @@ import {
   darkThemeStyles,
   lightThemeStyles,
 } from "../../../../example/styles";
+import { Locale } from "../../../../types/xmoney-sdk/sdk-base.types";
 
 type Appearance = {
   theme?: "light" | "dark" | "custom";

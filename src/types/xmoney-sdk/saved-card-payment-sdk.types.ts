@@ -1,4 +1,4 @@
-import { XMoneyBaseConfig, XMoneyBaseInstance } from "./sdk-base.types";
+import type { XMoneyBaseConfig, XMoneyBaseInstance } from "./sdk-base.types";
 
 /**
  * Configuration options for initializing and customizing the XMoney Saved Card Payment.
