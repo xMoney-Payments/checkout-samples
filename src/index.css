@@ -1,81 +1,185 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-neutral-25: #f7f6f9;
+  --color-neutral-50: #efeef1;
+  --color-neutral-100: #e3e1e8;
+  --color-neutral-200: #d1cddb;
+  --color-neutral-300: #9691a3;
+  --color-neutral-400: #797585;
+  --color-neutral-500: #63606d;
+  --color-neutral-600: #524f5a;
+  --color-neutral-700: #3f3b48;
+  --color-neutral-750: #2d2a34;
+  --color-neutral-800: #25232b;
+  --color-neutral-850: #201e25;
+  --color-neutral-900: #16141a;
+  --color-neutral: #63606d;
+
+  --color-primary-25: #f7f6ff;
+  --color-primary-50: #ece5ff;
+  --color-primary-100: #ded4ff;
+  --color-primary-200: #cebdff;
+  --color-primary-300: #a180ff;
+  --color-primary-400: #926bff;
+  --color-primary-500: #7c4dff;
+  --color-primary-600: #412297;
+  --color-primary-650: #361c7e;
+  --color-primary-700: #2d1861;
+  --color-primary-750: #24124c;
+  --color-primary-800: #190c3c;
+  --color-primary-850: #14082e;
+  --color-primary-900: #0f0821;
+  --color-primary: #7c4dff;
+
+  --color-green-50: #f2f8e7;
+  --color-green-100: #d6eab4;
+  --color-green-200: #c2df90;
+  --color-green-300: #a7d15e;
+  --color-green-400: #95c83e;
+  --color-green-500: #7bba0e;
+  --color-green-600: #70a90d;
+  --color-green-700: #57840a;
+  --color-green-800: #446608;
+  --color-green-900: #344e06;
+  --color-green: #7bba0e;
+
+  --color-blue-50: #e6f4ff;
+  --color-blue-100: #b0ddff;
+  --color-blue-200: #8accff;
+  --color-blue-300: #54b5ff;
+  --color-blue-400: #33a6ff;
+  --color-blue-500: #0090ff;
+  --color-blue-600: #0083e8;
+  --color-blue-700: #0066b5;
+  --color-blue-800: #004f8c;
+  --color-blue-900: #003c6b;
+  --color-blue: #0090ff;
+
+  --color-yellow-50: #fff8ec;
+  --color-yellow-100: #ffeac3;
+  --color-yellow-200: #ffe0a7;
+  --color-yellow-300: #ffd27e;
+  --color-yellow-400: #ffc965;
+  --color-yellow-500: #ffbc3f;
+  --color-yellow-600: #e8ab39;
+  --color-yellow-700: #b5852d;
+  --color-yellow-800: #8c6723;
+  --color-yellow-900: #6b4f1a;
+  --color-yellow: #ffbc3f;
+
+  --color-red-50: #ffebed;
+  --color-red-100: #ffc0c6;
+  --color-red-200: #ffa2aa;
+  --color-red-300: #ff7883;
+  --color-red-400: #ff5d6b;
+  --color-red-500: #ff3546;
+  --color-red-600: #e83040;
+  --color-red-700: #b52632;
+  --color-red-800: #8c1d27;
+  --color-red-900: #6b161d;
+  --color-red: #ff3546;
+}
+
+html,
 body {
-  margin: 0;
-  background-color: #f7f7f8;
+  @apply h-full;
+  background-color: var(--color-neutral-25);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(124, 77, 255, 0.08), transparent 45%),
+    radial-gradient(
+      circle at 100% 10%,
+      rgba(0, 144, 255, 0.08),
+      transparent 40%
+    );
+  background-attachment: fixed;
+  color: var(--color-neutral-900);
+  font-family: "Manrope", sans-serif;
 }
 
-.container {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: rgba(228, 232, 239, 0.5);
-  width: 350px;
+#root {
+  @apply min-h-screen flex flex-col;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+::selection {
+  background-color: var(--color-primary-200);
+  color: var(--color-primary-900);
 }
 
-input {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  height: 36px;
-  padding: 5px;
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+  @apply w-full px-3 py-2 rounded-md text-sm transition-all duration-200 focus:outline-none;
+  background-color: var(--color-neutral-25);
+  border: 1px solid var(--color-neutral-200);
+  color: var(--color-neutral-900);
+  box-shadow: 0 1px 0 0 rgba(22, 20, 26, 0.02);
 }
 
-.error {
-  color: red;
-  font-size: 12px;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary-400) 30%, transparent);
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+input:disabled,
+select:disabled,
+textarea:disabled {
+  @apply cursor-not-allowed;
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-400);
 }
 
-button:hover {
-  background-color: #0056b3;
+textarea {
+  @apply resize-y min-h-24;
 }
 
-.total {
-  font-weight: bold;
-  text-align: right;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.checkout-container.loading {
-  display: none;
-  /* Hide the form */
+@keyframes spin-animation {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.loading-none {
-  display: none;
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  /* Semi-transparent overlay */
-  color: white;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.loading {
-  font-size: 18px;
-  color: #fff;
-}
-
-.pay-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

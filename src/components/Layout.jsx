@@ -1,7 +1,10 @@
+import Navbar from "./ui/Navbar/Navbar";
+
 const Layout = (props) => {
   return (
-    <div>
-      <main>{props.children}</main>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div>{props.children}</div>
     </div>
   );
 };
