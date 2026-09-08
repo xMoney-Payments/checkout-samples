@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onCleanup, onMount, Show } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { Card, TransactionDetails } from "../../../types/checkout.types";
-import { XMoneySavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
+import { SavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
 import { CUSTOMER_ID } from "../../../constants";
 import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";
 import { CustomCards } from "../../ui/CustomCards/CustomCards";
@@ -13,7 +13,7 @@ interface SavedCardPaymentProps {
   checksum: string;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
-  onReady?: (instance: XMoneySavedCardPaymentInstance | null) => void;
+  onReady?: (instance: SavedCardPaymentInstance | null) => void;
   onCardSelect?: (cardId: number | null) => void;
   hideButton?: boolean;
 }
@@ -25,7 +25,7 @@ export function SavedCardPayment(props: SavedCardPaymentProps): JSX.Element {
   const [isPending, setIsPending] = createSignal(false);
   const [isLoadingCards, setIsLoadingCards] = createSignal(true);
 
-  let savedCardPaymentInstance: XMoneySavedCardPaymentInstance | null = null;
+  let savedCardPaymentInstance: SavedCardPaymentInstance | null = null;
 
   onMount(() => {
     getCards(CUSTOMER_ID)

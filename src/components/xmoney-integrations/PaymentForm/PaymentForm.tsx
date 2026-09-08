@@ -3,20 +3,28 @@ import { JSX } from "solid-js/jsx-runtime";
 
 import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyPaymentFormInstance } from "../../../types/xmoney-sdk/payment-form-sdk.types";
+import { PaymentFormInstance } from "../../../types/xmoney-sdk/payment-form-sdk.types";
+import {
+  Appearance,
+  CardInputGrouping,
+  Locale,
+} from "../../../types/xmoney-sdk/sdk-base.types";
 import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";
 
 interface PaymentFormProps {
   orderPayload: string;
   orderChecksum: string;
-  onReady?: (instance: XMoneyPaymentFormInstance) => void;
+  locale?: Locale;
+  appearance?: Appearance;
+  inputGrouping?: CardInputGrouping;
+  onReady?: (instance: PaymentFormInstance) => void;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
 }
 
 export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
   const [paymentFormInstance, setPaymentFormInstance] =
-    createSignal<XMoneyPaymentFormInstance | null>(null);
+    createSignal<PaymentFormInstance | null>(null);
   const [isReady, setIsReady] = createSignal(false);
   const [isSubmitPending, setIsSubmitPending] = createSignal(false);
   const containerId = `container-${Math.random().toString(36).substring(2, 15)}`;
@@ -27,12 +35,26 @@ export function XMoneyPaymentForm(props: PaymentFormProps): JSX.Element {
       card: {
         savedCards: {
           enabled: true,
-          optInVisible: false,
+          optInVisible: true,
+        },
+        cardHolderName: {
+          visible: true,
+        },
+        inputs: {
+          grouping: props.inputGrouping ?? "spaced",
+        },
+        submitButton: {
+          visible: true,
+          type: "pay",
         },
       },
       paymentMethods: {
-        googlePay: { enabled: true },
-        applePay: { enabled: true },
+        googlePay: { enabled: true, appearance: { type: "order" } },
+        applePay: { enabled: true, appearance: { type: "order" } },
+      },
+      options: {
+        locale: props.locale,
+        appearance: props.appearance,
       },
       orderChecksum: props.orderChecksum,
       orderPayload: props.orderPayload,

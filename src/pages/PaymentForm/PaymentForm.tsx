@@ -14,11 +14,17 @@ import { CURRENCY } from "../../constants";
 import { PUBLIC_KEY } from "../../config";
 
 import { CustomerInformation } from "./payments.types";
-import { XMoneyPaymentFormInstance } from "../../types/xmoney-sdk/payment-form-sdk.types";
+import { PaymentFormInstance } from "../../types/xmoney-sdk/payment-form-sdk.types";
+import {
+  Appearance,
+  CardInputGrouping,
+  Locale,
+} from "../../types/xmoney-sdk/sdk-base.types";
 import { TransactionDetails } from "../../types/checkout.types";
 import { PaymentFormConfig } from "./components/PaymentFormConfig/PaymentFormConfig";
 import { PaymentSuccessCard } from "../../components/ui/PaymentSuccessCard/PaymentSuccessCard";
 import { SecureInfo } from "../../components/ui/SecureInfo/SecureInfo";
+import { lightThemeStyles } from "../../example/styles";
 
 const initialFormData: CustomerInformation = {
   firstName: "customer_firstName",
@@ -30,7 +36,7 @@ const INITIAL_AMOUNT = 30;
 
 export function Payments(): JSX.Element {
   const [paymentFormInstance, setPaymentFormInstance] =
-    createSignal<XMoneyPaymentFormInstance | null>(null);
+    createSignal<PaymentFormInstance | null>(null);
   const [isInitializing, setIsInitializing] = createSignal(true);
   const [isUpdatingOrder, setIsUpdatingOrder] = createSignal(false);
   const [error, setError] = createSignal<string | null>(null);
@@ -42,6 +48,10 @@ export function Payments(): JSX.Element {
   } | null>(null);
   const [transactionResult, setTransactionResult] =
     createSignal<TransactionDetails | null>(null);
+  const [locale, setLocale] = createSignal<Locale>("en-US");
+  const [appearance, setAppearance] = createSignal<Appearance>(lightThemeStyles);
+  const [inputGrouping, setInputGrouping] =
+    createSignal<CardInputGrouping>("spaced");
 
   async function initializePayment() {
     try {
@@ -80,7 +90,7 @@ export function Payments(): JSX.Element {
 
       const intent = await createPaymentIntent(paymentParams);
 
-      instance.updateOrder({
+      await instance.updateOrder({
         orderPayload: intent.payload,
         orderChecksum: intent.checksum,
       });
@@ -133,12 +143,15 @@ export function Payments(): JSX.Element {
             paymentFormInstance={paymentFormInstance()}
             amount={amount()}
             onAmountChange={handleAmountChange}
-            onAppearanceChange={(appearance) =>
-              paymentFormInstance()?.updateAppearance(appearance)
-            }
-            onLocaleChange={(locale) =>
-              paymentFormInstance()?.updateLocale(locale)
-            }
+            onAppearanceChange={(nextAppearance) => {
+              setAppearance(nextAppearance);
+              paymentFormInstance()?.updateAppearance(nextAppearance);
+            }}
+            onLocaleChange={(nextLocale) => {
+              setLocale(nextLocale);
+              paymentFormInstance()?.updateLocale(nextLocale);
+            }}
+            onInputGroupingChange={setInputGrouping}
             disabled={isUpdatingOrder()}
           />
           <SectionCard
@@ -156,13 +169,18 @@ export function Payments(): JSX.Element {
                 transition: "opacity 0.2s",
               }}
             >
-              <XMoneyPaymentForm
-                orderPayload={order()!.payload}
-                orderChecksum={order()!.checksum}
-                onReady={setPaymentFormInstance}
-                onPaymentComplete={handlePaymentComplete}
-                onError={(err) => setError(String(err))}
-              />
+              <Show when={inputGrouping()} keyed>
+                <XMoneyPaymentForm
+                  orderPayload={order()!.payload}
+                  orderChecksum={order()!.checksum}
+                  locale={locale()}
+                  appearance={appearance()}
+                  inputGrouping={inputGrouping()}
+                  onReady={setPaymentFormInstance}
+                  onPaymentComplete={handlePaymentComplete}
+                  onError={(err) => setError(String(err))}
+                />
+              </Show>
             </div>
           </SectionCard>
           <SecureInfo />

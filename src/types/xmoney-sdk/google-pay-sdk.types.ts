@@ -1,55 +1,28 @@
 import type {
-  GooglePayButtonBorderType,
-  GooglePayButtonColor,
-  GooglePayButtonType,
-  Locale,
-  XMoneyBaseConfig,
-  XMoneyBaseInstance,
+  Appearance,
+  GooglePayAppearance,
+  BaseConfig,
+  BaseInstance,
+  SharedOptions,
 } from "./sdk-base.types";
 
 /**
- * Configuration options for initializing and customizing the XMoney Google Pay button.
+ * Configuration options for initializing and customizing the Google Pay button.
  */
-export interface XMoneyGooglePayConfig extends XMoneyBaseConfig {
+export interface GooglePayConfig extends BaseConfig {
   /**
    * Options for customizing the appearance and behavior of Google Pay.
    */
-  options?: {
-    /**
-     * Locale for the Google Pay.
-     * @defaultValue `"en-US"`
-     */
-    locale?: Locale;
+  options?: SharedOptions & {
     /**
      * Appearance customization options.
+     * Theme variables apply to the wallet iframe; button fields style the Google Pay button.
      */
-    appearance?: {
-      /**
-       * Color of the Google Pay button.
-       *
-       * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
-       */
-      color?: GooglePayButtonColor;
-      /**
-       * Corner radius of the Google Pay button.
-       * @defaultValue `12`
-       */
-      radius?: number;
-      /**
-       *  Type of the Google Pay button.
-       * @defaultValue `"pay"`
-       */
-      type?: GooglePayButtonType;
-      /**
-       * Border type of the Google Pay button.
-       * @defaultValue `"no_border"`
-       */
-      borderType?: GooglePayButtonBorderType;
-    };
+    appearance?: Appearance & GooglePayAppearance;
   };
 }
 
 /**
- * Represents an instance of the xMoney Google Pay, providing methods to interact with and manage the payment.
+ * Represents an instance of Google Pay, providing methods to interact with and manage the payment.
  */
-export interface XMoneyGooglePayInstance extends XMoneyBaseInstance {}
+export interface GooglePayInstance extends BaseInstance {}

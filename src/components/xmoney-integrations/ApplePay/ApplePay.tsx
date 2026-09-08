@@ -1,13 +1,13 @@
 import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
+import { ApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
 import { PUBLIC_KEY } from "../../../config";
 
 interface ApplePayProps {
   payload: string;
   checksum: string;
-  onReady?: (instance: XMoneyApplePayInstance | null) => void;
+  onReady?: (instance: ApplePayInstance | null) => void;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
 }
@@ -16,7 +16,7 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
   const [isLoading, setIsLoading] = createSignal(true);
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `apple-pay-${Math.random().toString(36).substring(2, 15)}`;
-  let applePayInstance: XMoneyApplePayInstance;
+  let applePayInstance: ApplePayInstance;
   let initialPayload: string | null = null;
 
   onMount(async () => {
@@ -33,6 +33,11 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
         orderChecksum: props.checksum,
         orderPayload: props.payload,
         publicKey: PUBLIC_KEY,
+        options: {
+          appearance: {
+            theme: "dark",
+          },
+        },
         onReady: () => {
           setIsReady(true);
           setIsLoading(false);

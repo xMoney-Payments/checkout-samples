@@ -30,7 +30,7 @@ This repository provides comprehensive code examples showing how to integrate th
 - ✅ Full TypeScript support with comprehensive type definitions
 - 🎯 SolidJS reactive components
 - 🎨 Customizable appearance (themes, variables, CSS rules)
-- 🌍 Multi-language support (English, Greek, Romanian)
+- 🌍 Multi-language support (English, Greek, Romanian, Bulgarian, Hungarian, Polish)
 - 🔒 Secure payment flow with checksum validation
 - 📱 Responsive design with Tailwind CSS
 
@@ -211,9 +211,15 @@ const paymentFormInstance = await window.XMoney.paymentForm({
       enabled: true, // Show saved cards for returning users
       optInVisible: false, // Hide the save-card checkbox
     },
+    cardHolderName: {
+      visible: true, // Show the cardholder name field
+    },
+    inputs: {
+      grouping: "spaced", // "spaced" | "condensed"
+    },
     submitButton: {
       visible: true, // Show the built-in submit button
-      type: "pay", // "book" | "buy" | "checkout" | "donate" | "order" | "pay" | "subscribe" | "topUp"
+      type: "pay", // "book" | "buy" | "checkout" | "donate" | "deposit" | "order" | "pay" | "subscribe" | "topUp"
     },
   },
 
@@ -223,7 +229,7 @@ const paymentFormInstance = await window.XMoney.paymentForm({
   },
 
   options: {
-    locale: "en-US", // "en-US" | "el-GR" | "ro-RO"
+    locale: "en-US", // "en-US" | "el-GR" | "ro-RO" | "bg-BG" | "hu-HU" | "pl-PL"
     appearance: {
       theme: "light", // "light" | "dark" | "custom"
       variables: {
@@ -283,6 +289,12 @@ const paymentCardInstance = await window.XMoney.paymentCard({
     savedCards: {
       enabled: false,
       optInVisible: true, // Show the save-card checkbox
+    },
+    cardHolderName: {
+      visible: true,
+    },
+    inputs: {
+      grouping: "condensed", // Compact card-style layout
     },
     submitButton: {
       visible: true, // Show or hide the built-in submit button
@@ -493,14 +505,15 @@ options: {
       colorPrimary: "#009688",
       colorBackground: "#ffffff",
       fontFamily: "Inter, system-ui, sans-serif",
+      brandAccent: "#00aa88", // custom vars are allowed and usable in rules
     },
     rules: {
       ".xmoney-input:hover": {
-        "box-shadow": "0 2px 4px rgba(0,0,0,0.1)",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
       },
     },
   },
-  locale: "en-US", // "en-US" | "el-GR" | "ro-RO"
+  locale: "en-US", // "en-US" | "el-GR" | "ro-RO" | "bg-BG" | "hu-HU" | "pl-PL"
 }
 ```
 
@@ -515,6 +528,22 @@ paymentFormInstance.updateAppearance({
 paymentFormInstance.updateLocale("el-GR");
 ```
 
+### Card input grouping
+
+`card.inputs.grouping` controls how card number, expiry, and CVV are laid out. It is set at initialization.
+
+```typescript
+// Spaced (default): each field is separate, with labels
+card: {
+  inputs: { grouping: "spaced" },
+}
+
+// Condensed: number, expiry, and CVV in a single card-style block
+card: {
+  inputs: { grouping: "condensed" },
+}
+```
+
 ### Button Customization
 
 Apple Pay and Google Pay buttons support their own appearance options:
@@ -525,7 +554,7 @@ options: {
   appearance: {
     style: "black",    // "white" | "black" | "white-outline"
     radius: 12,
-    type: "pay",       // see full list in XMoneyApplePayConfig
+    type: "pay",       // see full list in ApplePayConfig
   }
 }
 
@@ -590,23 +619,27 @@ checkout-samples/
 ### Common Configuration (All Methods)
 
 ```typescript
-interface XMoneyBaseConfig {
+interface BaseConfig {
   container: string | HTMLElement; // Required (not used by savedCardPayment)
   orderChecksum: string; // Required: integrity checksum
   orderPayload: string; // Required: Base64-encoded order data
   publicKey: string; // Required: "pk_{env}_{siteId}"
 
   onReady?: () => void;
-  onError?: (err: { code: number; message: string } | string) => void;
+  onError?: (err: { code: number | string; message: string } | string) => void;
   onPaymentComplete?: (data: TransactionDetails) => void;
   onPaymentProcessing?: (isProcessing: boolean) => void;
+  onValidation?: (event: ValidationEvent) => void;
+  options?: {
+    locale?: "en-US" | "el-GR" | "ro-RO" | "bg-BG" | "hu-HU" | "pl-PL";
+  };
 }
 ```
 
 ### Payment Form (`XMoney.paymentForm()`)
 
 ```typescript
-interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
+interface PaymentFormConfig extends BaseConfig {
   card?: {
     validationMode?: "onSubmit" | "onChange" | "onBlur" | "onTouched";
     savedCards?: {
@@ -615,7 +648,13 @@ interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
     };
     submitButton?: {
       visible?: boolean;      // default: true
-      type?: "book" | "buy" | "checkout" | "donate" | "order" | "pay" | "subscribe" | "topUp";
+      type?: "book" | "buy" | "checkout" | "donate" | "deposit" | "order" | "pay" | "subscribe" | "topUp";
+    };
+    cardHolderName?: {
+      visible?: boolean;      // default: true
+    };
+    inputs?: {
+      grouping?: "spaced" | "condensed"; // default: "spaced"
     };
     cardHolderVerification?: {
       name: { firstName: string; middleName: string; lastName: string };
@@ -623,15 +662,15 @@ interface XMoneyPaymentFormConfig extends XMoneyBaseConfig {
     };
   };
   paymentMethods?: {
-    googlePay?: { enabled?: boolean; appearance?: { ... } };
-    applePay?: { enabled?: boolean; appearance?: { ... } };
+    googlePay?: { enabled?: boolean; appearance?: { color?: "white" | "black"; radius?: number; type?: GooglePayButtonType; borderType?: "default_border" | "no_border"; height?: number } };
+    applePay?: { enabled?: boolean; appearance?: { style?: "white" | "black" | "white-outline"; radius?: number; type?: ApplePayButtonType; height?: number } };
   };
   options?: {
-    locale?: "en-US" | "el-GR" | "ro-RO";
+    locale?: "en-US" | "el-GR" | "ro-RO" | "bg-BG" | "hu-HU" | "pl-PL";
     appearance?: {
       theme?: "light" | "dark" | "custom";
-      variables?: Record<string, string>;
-      rules?: Record<string, Record<string, string>>;
+      variables?: AppearanceVariables; // known tokens + custom camelCase keys
+      rules?: AppearanceRules;
     };
   };
 }
@@ -660,12 +699,12 @@ Import types for full autocomplete and type safety:
 
 ```typescript
 import type {
-  XMoneyPaymentFormConfig,
-  XMoneyPaymentFormInstance,
+  PaymentFormConfig,
+  PaymentFormInstance,
 } from "./types/xmoney-sdk/payment-form-sdk.types";
 import type { TransactionDetails } from "./types/checkout.types";
 
-const config: XMoneyPaymentFormConfig = {
+const config: PaymentFormConfig = {
   container: "#payment-form",
   orderChecksum: checksum,
   orderPayload: payload,
@@ -675,7 +714,7 @@ const config: XMoneyPaymentFormConfig = {
   },
 };
 
-const instance: XMoneyPaymentFormInstance =
+const instance: PaymentFormInstance =
   await window.XMoney.paymentForm(config);
 ```
 

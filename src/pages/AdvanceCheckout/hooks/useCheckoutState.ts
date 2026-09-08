@@ -3,13 +3,13 @@ import { createPaymentIntent } from "../../../api";
 import { CURRENCY, INITIAL_FORM_DATA } from "../../../constants";
 import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyPaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
-import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
-import { XMoneyApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
+import { PaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
+import { GooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
+import { ApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
 
 import type { CheckoutState, OrderItem, PaymentMethodType } from "../types";
 import { PIZZA_MENU, DELIVERY_THRESHOLD, DELIVERY_FEE } from "../constants";
-import { XMoneySavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
+import { SavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
 
 const UPDATE_ORDER_DEBOUNCE_MS = 500;
 
@@ -43,13 +43,13 @@ export function useCheckoutState(): CheckoutState {
   );
 
   const [paymentCardInstance, setPaymentCardInstance] =
-    createSignal<XMoneyPaymentCardInstance | null>(null);
+    createSignal<PaymentCardInstance | null>(null);
   const [savedCardPaymentInstance, setSavedCardPaymentInstance] =
-    createSignal<XMoneySavedCardPaymentInstance | null>(null);
+    createSignal<SavedCardPaymentInstance | null>(null);
   const [googlePayInstance, setGooglePayInstance] =
-    createSignal<XMoneyGooglePayInstance | null>(null);
+    createSignal<GooglePayInstance | null>(null);
   const [applePayInstance, setApplePayInstance] =
-    createSignal<XMoneyApplePayInstance | null>(null);
+    createSignal<ApplePayInstance | null>(null);
 
   const totalAmount = () => computeTotal(orderItems());
 

@@ -1,6 +1,6 @@
 import { createSignal, onCleanup } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
-import { XMoneyPaymentFormInstance } from "../../../../types/xmoney-sdk/payment-form-sdk.types";
+import { PaymentFormInstance } from "../../../../types/xmoney-sdk/payment-form-sdk.types";
 import { Theme } from "../../payments.types";
 import { CURRENCY } from "../../../../constants";
 import {
@@ -10,20 +10,19 @@ import {
   darkThemeStyles,
   lightThemeStyles,
 } from "../../../../example/styles";
-import { Locale } from "../../../../types/xmoney-sdk/sdk-base.types";
-
-type Appearance = {
-  theme?: "light" | "dark" | "custom";
-  variables?: Record<string, string>;
-  rules?: Record<string, Record<string, string>>;
-};
+import type {
+  Appearance,
+  CardInputGrouping,
+  Locale,
+} from "../../../../types/xmoney-sdk/sdk-base.types";
 
 interface PaymentFormConfigProps {
-  paymentFormInstance: XMoneyPaymentFormInstance | null;
+  paymentFormInstance: PaymentFormInstance | null;
   amount: number;
   onAmountChange: (amount: number) => void;
   onAppearanceChange?: (appearance: Appearance) => void;
   onLocaleChange?: (locale: Locale) => void;
+  onInputGroupingChange?: (grouping: CardInputGrouping) => void;
   disabled?: boolean;
 }
 
@@ -32,10 +31,13 @@ export function PaymentFormConfig({
   onAmountChange,
   onAppearanceChange,
   onLocaleChange,
+  onInputGroupingChange,
   disabled = false,
 }: PaymentFormConfigProps): JSX.Element {
   const [locale, setLocale] = createSignal<Locale>("en-US");
   const [theme, setTheme] = createSignal<Theme>("light");
+  const [inputGrouping, setInputGrouping] =
+    createSignal<CardInputGrouping>("spaced");
   let debounceTimeout: number | null = null;
 
   const themeMap: Record<Theme, Appearance> = {
@@ -59,6 +61,11 @@ export function PaymentFormConfig({
     onLocaleChange?.(newLocale);
   }
 
+  function handleInputGroupingChange(grouping: CardInputGrouping) {
+    setInputGrouping(grouping);
+    onInputGroupingChange?.(grouping);
+  }
+
   function handleAmountInput(newAmount: number) {
     if (debounceTimeout) clearTimeout(debounceTimeout);
     debounceTimeout = window.setTimeout(() => {
@@ -71,7 +78,7 @@ export function PaymentFormConfig({
   });
 
   return (
-    <div class="grid gap-5 mb-2 p-5 rounded-2xl border border-[var(--color-neutral-100)] shadow-[0_4px_24px_rgba(22,20,26,0.06)] bg-gradient-to-r from-[var(--color-yellow-50)] to-white grid-cols-1 md:grid-cols-3">
+    <div class="grid gap-5 mb-2 p-5 rounded-2xl border border-[var(--color-neutral-100)] shadow-[0_4px_24px_rgba(22,20,26,0.06)] bg-gradient-to-r from-[var(--color-yellow-50)] to-white grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       <div class="flex flex-col gap-2">
         <label class="text-xs font-semibold uppercase tracking-wider text-[color:var(--color-neutral-500)]">
           Locale
@@ -85,6 +92,9 @@ export function PaymentFormConfig({
           <option value="en-US">English</option>
           <option value="ro-RO">Romanian</option>
           <option value="el-GR">Greek</option>
+          <option value="bg-BG">Bulgarian</option>
+          <option value="hu-HU">Hungarian</option>
+          <option value="pl-PL">Polish</option>
         </select>
       </div>
 
@@ -103,6 +113,25 @@ export function PaymentFormConfig({
           <option value="customGreen">Custom Green</option>
           <option value="customBlue">Custom Blue</option>
           <option value="customPurple">Custom Purple</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-semibold uppercase tracking-wider text-[color:var(--color-neutral-500)]">
+          Card layout
+        </label>
+        <select
+          value={inputGrouping()}
+          onChange={(e) =>
+            handleInputGroupingChange(
+              e.currentTarget.value as CardInputGrouping,
+            )
+          }
+          class="w-full"
+          disabled={disabled}
+        >
+          <option value="spaced">Spaced</option>
+          <option value="condensed">Condensed</option>
         </select>
       </div>
 

@@ -2,12 +2,12 @@ import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
 import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
+import { GooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
 
 interface GooglePayProps {
   payload: string;
   checksum: string;
-  onReady?: (instance: XMoneyGooglePayInstance | null) => void;
+  onReady?: (instance: GooglePayInstance | null) => void;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
 }
@@ -16,7 +16,7 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
   const [isLoading, setIsLoading] = createSignal(true);
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `google-pay-${Math.random().toString(36).substring(2, 15)}`;
-  let googlePayInstance: XMoneyGooglePayInstance | undefined;
+  let googlePayInstance: GooglePayInstance | undefined;
   let initialPayload: string | null = null;
 
   onMount(async () => {
@@ -32,6 +32,11 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
         orderChecksum: props.checksum,
         orderPayload: props.payload,
         publicKey: PUBLIC_KEY,
+        options: {
+          appearance: {
+            theme: "dark",
+          },
+        },
         onReady: () => {
           setIsReady(true);
           setIsLoading(false);
