@@ -14,7 +14,7 @@ export interface AccordionItemProps {
 export function AccordionItem(props: AccordionItemProps) {
   return (
     <div
-      class={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
+      class={`rounded-xl sm:rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
         props.isOpen
           ? "border-[var(--color-primary-400)] bg-white shadow-[0_8px_30px_rgba(124,77,255,0.12)]"
           : "border-[var(--color-neutral-100)] bg-white hover:border-[var(--color-neutral-200)] hover:shadow-sm"
@@ -22,7 +22,7 @@ export function AccordionItem(props: AccordionItemProps) {
     >
       <button
         type="button"
-        class="w-full flex items-center gap-4 px-5 py-4 bg-transparent cursor-pointer text-left transition-colors duration-200"
+        class="w-full flex items-center gap-3 sm:gap-4 px-3 py-3 sm:px-5 sm:py-4 bg-transparent cursor-pointer text-left transition-colors duration-200"
         onClick={props.onToggle}
         aria-expanded={props.isOpen}
       >
@@ -38,7 +38,7 @@ export function AccordionItem(props: AccordionItemProps) {
           </Show>
         </div>
 
-        <span class="flex items-center justify-center w-11 h-9 rounded-xl flex-shrink-0 bg-[var(--color-neutral-25)] border border-[var(--color-neutral-100)] overflow-hidden">
+        <span class="flex items-center justify-center w-9 h-8 sm:w-11 sm:h-9 rounded-lg sm:rounded-xl flex-shrink-0 bg-[var(--color-neutral-25)] border border-[var(--color-neutral-100)] overflow-hidden">
           {props.icon}
         </span>
 
@@ -67,8 +67,8 @@ export function AccordionItem(props: AccordionItemProps) {
       </button>
 
       <Show when={props.isOpen}>
-        <div class="px-5 pb-5 pt-1 animate-[slideDown_0.25s_ease]">
-          <div class="border-t border-[var(--color-neutral-100)] pt-4">
+        <div class="px-3 pb-3 pt-1 sm:px-5 sm:pb-5 animate-[slideDown_0.25s_ease]">
+          <div class="border-t border-[var(--color-neutral-100)] pt-3 sm:pt-4">
             {props.children}
           </div>
         </div>

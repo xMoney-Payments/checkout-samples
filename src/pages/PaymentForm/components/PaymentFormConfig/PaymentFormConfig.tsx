@@ -78,7 +78,7 @@ export function PaymentFormConfig({
   });
 
   return (
-    <div class="grid gap-5 mb-2 p-5 rounded-2xl border border-[var(--color-neutral-100)] shadow-[0_4px_24px_rgba(22,20,26,0.06)] bg-gradient-to-r from-[var(--color-yellow-50)] to-white grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-3 mb-2 p-3 sm:gap-5 sm:p-5 rounded-xl sm:rounded-2xl border border-[var(--color-neutral-100)] shadow-[0_4px_24px_rgba(22,20,26,0.06)] bg-gradient-to-r from-[var(--color-yellow-50)] to-white grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       <div class="flex flex-col gap-2">
         <label class="text-xs font-semibold uppercase tracking-wider text-[color:var(--color-neutral-500)]">
           Locale

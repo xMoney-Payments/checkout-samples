@@ -1,11 +1,11 @@
 import type { CardHolderVerificationResult } from "../checkout.types";
 import type {
   Appearance,
-  CardFieldName,
   CardInputGrouping,
   FieldValidationError,
-  FieldValidationState,
   FormButtonType,
+  PaymentChangeEvent,
+  ValidationEvent,
   ValidationMode,
   BaseConfig,
   BaseInstance,
@@ -53,17 +53,6 @@ export interface PaymentCardConfig extends BaseConfig {
        * @defaultValue `"pay"`
        */
       type?: FormButtonType;
-    };
-    /**
-     * Options for the cardholder name field.
-     */
-    cardHolderName?: {
-      /**
-       * Determines whether the cardholder name field is visible.
-       *
-       * @defaultValue `true`
-       */
-      visible?: boolean;
     };
     /**
      * Options for card input layout.
@@ -115,6 +104,12 @@ export interface PaymentCardConfig extends BaseConfig {
    * @param isProcessing - `true` if the form is processing a payment, `false` otherwise.
    */
   onPaymentProcessing?: (isProcessing: boolean) => void;
+
+  /**
+   * Callback executed when payment details that affect the CTA change,
+   * such as installment availability or the submit button label.
+   */
+  onPaymentChange?: (event: PaymentChangeEvent) => void;
 }
 
 /**
@@ -138,9 +133,10 @@ export interface PaymentCardInstance extends BaseInstance {
    *
    * @returns An object containing the validation status and any errors found.
    */
-  validate: () => Promise<{
-    isValid: boolean;
-    errors: Partial<Record<CardFieldName, FieldValidationError>>;
-    fields?: Record<CardFieldName, FieldValidationState>;
-  }>;
+  validate: () => Promise<
+    ValidationEvent & {
+      /** @deprecated Use `fields` instead. */
+      errors: Record<string, FieldValidationError>;
+    }
+  >;
 }

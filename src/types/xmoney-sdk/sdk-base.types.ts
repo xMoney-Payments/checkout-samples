@@ -49,7 +49,7 @@ export type ApplePayButtonType =
 
 export type CardFieldName = "cardHolderName" | "cardNumber" | "expDate" | "cvv";
 
-export type ValidationTrigger = "blur" | "change" | "submit";
+export type ValidationTrigger = "input" | "blur" | "submit";
 
 type AppearanceRulePart<Base extends string, Part extends string> = [
   Part,
@@ -236,11 +236,16 @@ export interface Appearance {
   rules?: AppearanceRules;
 }
 
+/**
+ * Official Google Pay button options. Google does not allow custom button
+ * artwork, CSS rules, or theme variables on the mark.
+ */
 export interface GooglePayAppearance {
   /**
-   * Color of the Google Pay button.
+   * Color of the Google Pay button. Use `"black"` on light surfaces and
+   * `"white"` on dark surfaces.
    *
-   * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
+   * @defaultValue `"black"`
    */
   color?: GooglePayButtonColor;
   /**
@@ -259,16 +264,21 @@ export interface GooglePayAppearance {
    */
   borderType?: GooglePayButtonBorderType;
   /**
-   * Height of the Google Pay button, in pixels.
+   * Height of the Google Pay button, in pixels. Google’s minimum is 40.
    * @defaultValue `48`
    */
   height?: number;
 }
 
+/**
+ * Official Apple Pay button options. Apple does not allow custom button
+ * artwork, CSS rules, or theme variables on the mark.
+ */
 export interface ApplePayAppearance {
   /**
-   * Style of the Apple Pay button.
-   * @defaultValue `"black"` when theme is light, `"white"` when theme is dark
+   * Style of the Apple Pay button. Use `"black"` or `"white-outline"` on
+   * light surfaces and `"white"` on dark surfaces.
+   * @defaultValue `"black"`
    */
   style?: ApplePayButtonStyle;
   /**
@@ -282,7 +292,7 @@ export interface ApplePayAppearance {
    */
   type?: ApplePayButtonType;
   /**
-   * Height of the Apple Pay button, in pixels.
+   * Height of the Apple Pay button, in pixels. Apple’s minimum is 30.
    * @defaultValue `48`
    */
   height?: number;
@@ -301,9 +311,22 @@ export interface FieldValidationState {
 
 export interface ValidationEvent {
   isValid: boolean;
+  empty: boolean;
   fields: Record<CardFieldName, FieldValidationState>;
   field?: CardFieldName;
   trigger: ValidationTrigger;
+}
+
+export interface PaymentChangeEvent {
+  installments: {
+    available: boolean;
+    count: number;
+    amount: number;
+    formattedAmount: string;
+  };
+  button: {
+    label: string;
+  };
 }
 
 export interface SharedOptions {

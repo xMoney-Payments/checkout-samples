@@ -1,5 +1,4 @@
 import type {
-  Appearance,
   ApplePayAppearance,
   BaseConfig,
   BaseInstance,
@@ -15,10 +14,11 @@ export interface ApplePayConfig extends BaseConfig {
    */
   options?: SharedOptions & {
     /**
-     * Appearance customization options.
-     * Theme variables apply to the wallet iframe; button fields style the Apple Pay button.
+     * Official Apple Pay button options only (`style`, `type`, `radius`,
+     * `height`). Custom CSS, theme variables, and custom artwork are not
+     * allowed by Apple’s brand guidelines.
      */
-    appearance?: Appearance & ApplePayAppearance;
+    appearance?: ApplePayAppearance;
   };
 }
 

@@ -10,7 +10,9 @@ export interface PageContainerProps {
 export function PageContainer(props: PageContainerProps): JSX.Element {
   return (
     <div class="flex flex-col">
-      <main class="flex-1 max-w-5xl mx-auto w-full p-5 ">{props.children}</main>
+      <main class="flex-1 max-w-5xl mx-auto w-full px-3 py-4 sm:p-5">
+        {props.children}
+      </main>
     </div>
   );
 }

@@ -2,6 +2,10 @@ import type { PaymentCardInstance } from "../../types/xmoney-sdk/payment-card-sd
 import type { GooglePayInstance } from "../../types/xmoney-sdk/google-pay-sdk.types";
 import type { ApplePayInstance } from "../../types/xmoney-sdk/apple-pay-sdk.types";
 import type { TransactionDetails } from "../../types/checkout.types";
+import type {
+  PaymentChangeEvent,
+  ValidationEvent,
+} from "../../types/xmoney-sdk/sdk-base.types";
 import { SavedCardPaymentInstance } from "../../types/xmoney-sdk/saved-card-payment-sdk.types";
 
 export interface PizzaItem {
@@ -20,8 +24,7 @@ export type PaymentMethodType =
   | "card"
   | "saved-card"
   | "google-pay"
-  | "apple-pay"
-  | "payment-form";
+  | "apple-pay";
 
 export interface IntentResult {
   payload: string;
@@ -57,10 +60,12 @@ export interface CheckoutState {
   handlePaymentError: (err: unknown) => void;
   handlePlaceOrder: () => void;
   handlePayWithSavedCard: () => void;
+  handlePaymentChange: (event: PaymentChangeEvent) => void;
+  handleCardValidation: (event: ValidationEvent) => void;
+  cardButtonLabel: () => string;
+  isCardValid: () => boolean;
   setPaymentCardInstance: (v: PaymentCardInstance | null) => void;
-  setSavedCardPaymentInstance: (
-    v: SavedCardPaymentInstance | null,
-  ) => void;
+  setSavedCardPaymentInstance: (v: SavedCardPaymentInstance | null) => void;
   setGooglePayInstance: (v: GooglePayInstance | null) => void;
   setApplePayInstance: (v: ApplePayInstance | null) => void;
   setSelectedSavedCardId: (v: number | null) => void;

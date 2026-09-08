@@ -26,9 +26,9 @@ export function OrderSummaryCard(props: OrderSummaryCardProps) {
       headerBg="bg-gradient-to-r from-[var(--color-yellow-50)] to-white"
       title="Order Summary"
       subtitle={`${items().reduce((sum, i) => sum + i.quantity, 0)} items in your cart`}
-      class="sticky top-20"
+      class="lg:sticky lg:top-16"
     >
-      <div class="p-5 flex flex-col gap-3">
+      <div class="p-3 sm:p-5 flex flex-col gap-2 sm:gap-3">
         <For each={items()}>
           {(item) => (
             <div class="flex items-center gap-3 py-2">
@@ -44,7 +44,7 @@ export function OrderSummaryCard(props: OrderSummaryCardProps) {
               <div class="flex items-center gap-1.5">
                 <button
                   type="button"
-                  class="w-7 h-7 rounded-lg border border-[var(--color-neutral-200)] bg-white flex items-center justify-center text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-50)] cursor-pointer transition-colors text-sm font-bold"
+                  class="w-8 h-8 sm:w-7 sm:h-7 rounded-lg border border-[var(--color-neutral-200)] bg-white flex items-center justify-center text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-50)] cursor-pointer transition-colors text-sm font-bold"
                   onClick={() => props.state.handleQuantityChange(item.id, -1)}
                 >
                   -
@@ -54,7 +54,7 @@ export function OrderSummaryCard(props: OrderSummaryCardProps) {
                 </span>
                 <button
                   type="button"
-                  class="w-7 h-7 rounded-lg border border-[var(--color-neutral-200)] bg-white flex items-center justify-center text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-50)] cursor-pointer transition-colors text-sm font-bold"
+                  class="w-8 h-8 sm:w-7 sm:h-7 rounded-lg border border-[var(--color-neutral-200)] bg-white flex items-center justify-center text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-50)] cursor-pointer transition-colors text-sm font-bold"
                   onClick={() => props.state.handleQuantityChange(item.id, 1)}
                 >
                   +
@@ -65,7 +65,7 @@ export function OrderSummaryCard(props: OrderSummaryCardProps) {
         </For>
       </div>
 
-      <div class="px-5 pb-4">
+      <div class="px-3 pb-3 sm:px-5 sm:pb-4">
         <div class="border-t border-dashed border-[var(--color-neutral-200)] pt-4 flex flex-col gap-2">
           <div class="flex justify-between text-sm text-[var(--color-neutral-500)]">
             <span>Subtotal</span>
@@ -109,7 +109,7 @@ export function OrderSummaryCard(props: OrderSummaryCardProps) {
       </div>
 
       <div
-        class="px-5 pb-6"
+        class="px-3 pb-4 sm:px-5 sm:pb-6"
         style={{
           opacity: isDisabled() ? "0.5" : "1",
           "pointer-events": isDisabled() ? "none" : "auto",

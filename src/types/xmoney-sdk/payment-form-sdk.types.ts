@@ -23,7 +23,7 @@ export interface PaymentFormConfig extends PaymentCardConfig {
        */
       enabled?: boolean;
       /**
-       * Appearance customization for Google Pay button.
+       * Official Google Pay button options. Custom artwork is not allowed.
        */
       appearance?: GooglePayAppearance;
     };
@@ -38,7 +38,7 @@ export interface PaymentFormConfig extends PaymentCardConfig {
        */
       enabled?: boolean;
       /**
-       * Appearance customization for Apple Pay button.
+       * Official Apple Pay button options. Custom artwork is not allowed.
        */
       appearance?: ApplePayAppearance;
     };

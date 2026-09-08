@@ -1,5 +1,4 @@
 import type {
-  Appearance,
   GooglePayAppearance,
   BaseConfig,
   BaseInstance,
@@ -15,10 +14,11 @@ export interface GooglePayConfig extends BaseConfig {
    */
   options?: SharedOptions & {
     /**
-     * Appearance customization options.
-     * Theme variables apply to the wallet iframe; button fields style the Google Pay button.
+     * Official Google Pay button options only (`color`, `type`, `radius`,
+     * `height`, `borderType`). Custom CSS, theme variables, and custom
+     * artwork are not allowed by Google’s brand guidelines.
      */
-    appearance?: Appearance & GooglePayAppearance;
+    appearance?: GooglePayAppearance;
   };
 }
 

@@ -4,6 +4,10 @@ import { PUBLIC_KEY } from "../../../config";
 
 import { TransactionDetails } from "../../../types/checkout.types";
 import { PaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
+import type {
+  PaymentChangeEvent,
+  ValidationEvent,
+} from "../../../types/xmoney-sdk/sdk-base.types";
 import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";
 
 interface PaymentCardProps {
@@ -13,7 +17,10 @@ interface PaymentCardProps {
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
   onPaymentProcessing?: (isProcessing: boolean) => void;
+  onPaymentChange?: (event: PaymentChangeEvent) => void;
+  onValidation?: (event: ValidationEvent) => void;
   hideSubmitButton?: boolean;
+  savedCardsEnabled?: boolean;
 }
 
 export function PaymentCard(props: PaymentCardProps): JSX.Element {
@@ -31,14 +38,9 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
 
     paymentCardInstance = await window.XMoney.paymentCard({
       container: containerId,
-      options: {
-        appearance: {
-          theme: "dark",
-        },
-      },
       card: {
         savedCards: {
-          enabled: true,
+          enabled: props.savedCardsEnabled ?? false,
           optInVisible: true,
         },
         cardHolderName: {
@@ -69,6 +71,12 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
       },
       onPaymentComplete: (result: TransactionDetails) => {
         props.onPaymentComplete?.(result);
+      },
+      onPaymentChange: (event) => {
+        props.onPaymentChange?.(event);
+      },
+      onValidation: (event) => {
+        props.onValidation?.(event);
       },
     });
   });
