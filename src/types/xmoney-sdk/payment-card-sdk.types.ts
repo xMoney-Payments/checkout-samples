@@ -1,17 +1,21 @@
 import type { CardHolderVerificationResult } from "../checkout.types";
 import type {
+  Appearance,
+  CardInputGrouping,
+  FieldValidationError,
   FormButtonType,
-  Locale,
-  Theme,
+  PaymentChangeEvent,
+  ValidationEvent,
   ValidationMode,
-  XMoneyBaseConfig,
-  XMoneyBaseInstance,
+  BaseConfig,
+  BaseInstance,
+  SharedOptions,
 } from "./sdk-base.types";
 
 /**
  * Configuration options for initializing and customizing the xMoney Payment Card element.
  */
-export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
+export interface PaymentCardConfig extends BaseConfig {
   card?: {
     /**
      * Validation mode for the form.
@@ -51,6 +55,20 @@ export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
       type?: FormButtonType;
     };
     /**
+     * Options for card input layout.
+     */
+    inputs?: {
+      /**
+       * Layout of the card number, expiry, and CVV fields.
+       *
+       * `"spaced"` renders each field separately with labels.
+       * `"condensed"` groups them into a single card-style block.
+       *
+       * @defaultValue `"spaced"`
+       */
+      grouping?: CardInputGrouping;
+    };
+    /**
      * Card holder verification options.
      */
     cardHolderVerification?: {
@@ -73,39 +91,11 @@ export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
   /**
    * Options for customizing the appearance and behavior of form elements.
    */
-  options?: {
+  options?: SharedOptions & {
     /**
      * Appearance customization options.
      */
-    appearance?: {
-      /**
-       * Theme for the payment form.
-       *
-       * @defaultValue `"light"`
-       */
-      theme?: Theme;
-
-      /**
-       * CSS variables for custom themes.
-       *
-       * @example { colorPrimary: "#009688" }
-       */
-      variables?: Record<string, string>;
-
-      /**
-       * CSS rules for custom styles.
-       *
-       * @example { ".xmoney-input:hover": { "color": "#333" } }
-       */
-      rules?: Record<string, Record<string, string>>;
-    };
-
-    /**
-     * Locale for the payment form.
-     *
-     * @defaultValue `"en-US"`
-     */
-    locale?: Locale;
+    appearance?: Appearance;
   };
 
   /**
@@ -114,29 +104,24 @@ export interface XMoneyPaymentCardConfig extends XMoneyBaseConfig {
    * @param isProcessing - `true` if the form is processing a payment, `false` otherwise.
    */
   onPaymentProcessing?: (isProcessing: boolean) => void;
+
+  /**
+   * Callback executed when payment details that affect the CTA change,
+   * such as installment availability or the submit button label.
+   */
+  onPaymentChange?: (event: PaymentChangeEvent) => void;
 }
 
 /**
- * Represents an instance of the XMoney payment card, providing methods to interact with and manage the form.
+ * Represents an instance of the payment card, providing methods to interact with and manage the form.
  */
-export interface XMoneyPaymentCardInstance extends XMoneyBaseInstance {
-  /**
-   * Updates the locale of the payment form.
-   *
-   * @param locale - Locale to set for the form.
-   */
-  updateLocale: (locale: Locale) => void;
-
+export interface PaymentCardInstance extends BaseInstance {
   /**
    * Updates the appearance of the payment form.
    *
    * @param appearance - Theme, CSS variables, and/or CSS rules to apply.
    */
-  updateAppearance: (appearance: {
-    theme?: Theme;
-    variables?: Record<string, string>;
-    rules?: Record<string, Record<string, string>>;
-  }) => void;
+  updateAppearance: (appearance: Appearance) => void;
 
   /**
    * Submits the payment.
@@ -148,8 +133,10 @@ export interface XMoneyPaymentCardInstance extends XMoneyBaseInstance {
    *
    * @returns An object containing the validation status and any errors found.
    */
-  validate: () => Promise<{
-    isValid: boolean;
-    errors: Record<string, { message: string; code: string }>;
-  }>;
+  validate: () => Promise<
+    ValidationEvent & {
+      /** @deprecated Use `fields` instead. */
+      errors: Record<string, FieldValidationError>;
+    }
+  >;
 }

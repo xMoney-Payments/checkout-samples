@@ -1,8 +1,12 @@
-import type { XMoneyPaymentCardInstance } from "../../types/xmoney-sdk/payment-card-sdk.types";
-import type { XMoneyGooglePayInstance } from "../../types/xmoney-sdk/google-pay-sdk.types";
-import type { XMoneyApplePayInstance } from "../../types/xmoney-sdk/apple-pay-sdk.types";
+import type { PaymentCardInstance } from "../../types/xmoney-sdk/payment-card-sdk.types";
+import type { GooglePayInstance } from "../../types/xmoney-sdk/google-pay-sdk.types";
+import type { ApplePayInstance } from "../../types/xmoney-sdk/apple-pay-sdk.types";
 import type { TransactionDetails } from "../../types/checkout.types";
-import { XMoneySavedCardPaymentInstance } from "../../types/xmoney-sdk/saved-card-payment-sdk.types";
+import type {
+  PaymentChangeEvent,
+  ValidationEvent,
+} from "../../types/xmoney-sdk/sdk-base.types";
+import { SavedCardPaymentInstance } from "../../types/xmoney-sdk/saved-card-payment-sdk.types";
 
 export interface PizzaItem {
   id: number;
@@ -20,8 +24,7 @@ export type PaymentMethodType =
   | "card"
   | "saved-card"
   | "google-pay"
-  | "apple-pay"
-  | "payment-form";
+  | "apple-pay";
 
 export interface IntentResult {
   payload: string;
@@ -57,15 +60,17 @@ export interface CheckoutState {
   handlePaymentError: (err: unknown) => void;
   handlePlaceOrder: () => void;
   handlePayWithSavedCard: () => void;
-  setPaymentCardInstance: (v: XMoneyPaymentCardInstance | null) => void;
-  setSavedCardPaymentInstance: (
-    v: XMoneySavedCardPaymentInstance | null,
-  ) => void;
-  setGooglePayInstance: (v: XMoneyGooglePayInstance | null) => void;
-  setApplePayInstance: (v: XMoneyApplePayInstance | null) => void;
+  handlePaymentChange: (event: PaymentChangeEvent) => void;
+  handleCardValidation: (event: ValidationEvent) => void;
+  cardButtonLabel: () => string;
+  isCardValid: () => boolean;
+  setPaymentCardInstance: (v: PaymentCardInstance | null) => void;
+  setSavedCardPaymentInstance: (v: SavedCardPaymentInstance | null) => void;
+  setGooglePayInstance: (v: GooglePayInstance | null) => void;
+  setApplePayInstance: (v: ApplePayInstance | null) => void;
   setSelectedSavedCardId: (v: number | null) => void;
   setIsCardReady: (v: boolean) => void;
   setIsSavedCardReady: (v: boolean) => void;
   selectedSavedCardId: () => number | null;
-  savedCardPaymentInstance: () => XMoneySavedCardPaymentInstance | null;
+  savedCardPaymentInstance: () => SavedCardPaymentInstance | null;
 }

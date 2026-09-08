@@ -10,7 +10,7 @@ export function AdvanceCheckout() {
 
   return (
     <div class="min-h-screen">
-      <div class="max-w-7xl mx-auto px-6">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6">
         <Show when={state.error()}>
           <ErrorAlert
             title="Payment Error"
@@ -25,7 +25,7 @@ export function AdvanceCheckout() {
       </div>
 
       <Show when={state.isLoading()}>
-        <div class="max-w-7xl mx-auto px-6 py-12">
+        <div class="max-w-7xl mx-auto px-3 py-8 sm:px-6 sm:py-12">
           <LoadingSpinner size="lg" message="Preparing your checkout..." />
         </div>
       </Show>

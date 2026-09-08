@@ -14,7 +14,7 @@ export function ErrorAlert(props: ErrorAlertProps): JSX.Element {
     <div
       class={
         isBanner
-          ? "flex gap-4 p-5 rounded-xl mb-5 shadow-md border bg-[color:var(--color-red-50)] border-[color:var(--color-red-200)] animate-[slideInDown_0.35s_ease]"
+          ? "flex gap-3 p-3 sm:gap-4 sm:p-5 rounded-xl mb-3 sm:mb-5 shadow-md border bg-[color:var(--color-red-50)] border-[color:var(--color-red-200)] animate-[slideInDown_0.35s_ease]"
           : "flex items-start gap-3 p-4 rounded-lg border bg-[color:var(--color-red-50)] border-[color:var(--color-red-200)]"
       }
     >

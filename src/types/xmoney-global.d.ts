@@ -1,43 +1,43 @@
 import {
-  XMoneyApplePayConfig,
-  XMoneyApplePayInstance,
+  ApplePayConfig,
+  ApplePayInstance,
 } from "./xmoney-sdk/apple-pay-sdk.types";
 import {
-  XMoneyPaymentCardConfig,
-  XMoneyPaymentCardInstance,
+  PaymentCardConfig,
+  PaymentCardInstance,
 } from "./xmoney-sdk/payment-card-sdk.types";
 import {
-  XMoneyGooglePayInstance,
-  XMoneyGooglePayConfig,
+  GooglePayInstance,
+  GooglePayConfig,
 } from "./xmoney-sdk/google-pay-sdk.types";
 import {
-  XMoneyPaymentFormConfig,
-  XMoneyPaymentFormInstance,
+  PaymentFormConfig,
+  PaymentFormInstance,
 } from "./xmoney-sdk/payment-form-sdk.types";
 import { PaymentMethodCapabilities } from "./xmoney-sdk/payment-method-capabilities.types";
 import {
-  XMoneySavedCardPaymentInstance,
-  XMoneySavedCardPaymentConfig,
+  SavedCardPaymentInstance,
+  SavedCardPaymentConfig,
 } from "./xmoney-sdk/saved-card-payment-sdk.types";
 
 declare global {
   interface Window {
     XMoney: {
       paymentForm: (
-        config: XMoneyPaymentFormConfig,
-      ) => Promise<XMoneyPaymentFormInstance>;
+        config: PaymentFormConfig,
+      ) => Promise<PaymentFormInstance>;
       paymentCard: (
-        config: XMoneyPaymentCardConfig,
-      ) => Promise<XMoneyPaymentCardInstance>;
+        config: PaymentCardConfig,
+      ) => Promise<PaymentCardInstance>;
       savedCardPayment: (
-        config: XMoneySavedCardPaymentConfig,
-      ) => Promise<XMoneySavedCardPaymentInstance>;
+        config: SavedCardPaymentConfig,
+      ) => Promise<SavedCardPaymentInstance>;
       googlePay: (
-        config: XMoneyGooglePayConfig,
-      ) => Promise<XMoneyGooglePayInstance>;
+        config: GooglePayConfig,
+      ) => Promise<GooglePayInstance>;
       applePay: (
-        config: XMoneyApplePayConfig,
-      ) => Promise<XMoneyApplePayInstance>;
+        config: ApplePayConfig,
+      ) => Promise<ApplePayInstance>;
       getPaymentMethodCapabilities: () => Promise<PaymentMethodCapabilities>;
     };
   }

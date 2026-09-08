@@ -3,15 +3,21 @@ import { createPaymentIntent } from "../../../api";
 import { CURRENCY, INITIAL_FORM_DATA } from "../../../constants";
 import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyPaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
-import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
-import { XMoneyApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
+import { PaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
+import { GooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
+import { ApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
 
 import type { CheckoutState, OrderItem, PaymentMethodType } from "../types";
 import { PIZZA_MENU, DELIVERY_THRESHOLD, DELIVERY_FEE } from "../constants";
-import { XMoneySavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
+import { SavedCardPaymentInstance } from "../../../types/xmoney-sdk/saved-card-payment-sdk.types";
+import type {
+  PaymentChangeEvent,
+  ValidationEvent,
+} from "../../../types/xmoney-sdk/sdk-base.types";
+import { formatFieldValidationErrors } from "../../_shared/formatPaymentError";
 
 const UPDATE_ORDER_DEBOUNCE_MS = 500;
+const DEFAULT_CARD_BUTTON_LABEL = "Place Order";
 
 function computeTotal(items: OrderItem[]): number {
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -43,13 +49,17 @@ export function useCheckoutState(): CheckoutState {
   );
 
   const [paymentCardInstance, setPaymentCardInstance] =
-    createSignal<XMoneyPaymentCardInstance | null>(null);
+    createSignal<PaymentCardInstance | null>(null);
   const [savedCardPaymentInstance, setSavedCardPaymentInstance] =
-    createSignal<XMoneySavedCardPaymentInstance | null>(null);
+    createSignal<SavedCardPaymentInstance | null>(null);
   const [googlePayInstance, setGooglePayInstance] =
-    createSignal<XMoneyGooglePayInstance | null>(null);
+    createSignal<GooglePayInstance | null>(null);
   const [applePayInstance, setApplePayInstance] =
-    createSignal<XMoneyApplePayInstance | null>(null);
+    createSignal<ApplePayInstance | null>(null);
+  const [cardButtonLabel, setCardButtonLabel] = createSignal(
+    DEFAULT_CARD_BUTTON_LABEL,
+  );
+  const [isCardValid, setIsCardValid] = createSignal(false);
 
   const totalAmount = () => computeTotal(orderItems());
 
@@ -86,12 +96,39 @@ export function useCheckoutState(): CheckoutState {
     setError("Payment failed. Please try a different method or try again.");
   };
 
-  const handlePlaceOrder = () => {
-    paymentCardInstance()?.submit();
+  const handlePlaceOrder = async () => {
+    const instance = paymentCardInstance();
+    if (!instance) return;
+
+    setError(null);
+    try {
+      const result = await instance.validate();
+      setIsCardValid(result.isValid);
+      if (!result.isValid) {
+        const messages =
+          formatFieldValidationErrors(result.fields) ||
+          Object.values(result.errors)
+            .map((fieldError) => fieldError?.message)
+            .filter(Boolean)
+            .join(" ");
+        setError(messages || "Please check your card details and try again.");
+        return;
+      }
+      instance.submit();
+    } catch (err) {
+      handlePaymentError(err);
+    }
+  };
+
+  const handlePaymentChange = (event: PaymentChangeEvent) => {
+    setCardButtonLabel(event.button.label);
+  };
+
+  const handleCardValidation = (event: ValidationEvent) => {
+    setIsCardValid(event.isValid);
   };
 
   const handlePayWithSavedCard = () => {
-    debugger;
     const instance = savedCardPaymentInstance();
     const cardId = selectedSavedCardId();
     if (instance && cardId) {
@@ -190,6 +227,10 @@ export function useCheckoutState(): CheckoutState {
     handlePaymentError,
     handlePlaceOrder,
     handlePayWithSavedCard,
+    handlePaymentChange,
+    handleCardValidation,
+    cardButtonLabel,
+    isCardValid,
     savedCardPaymentInstance,
     selectedSavedCardId,
     setPaymentCardInstance,

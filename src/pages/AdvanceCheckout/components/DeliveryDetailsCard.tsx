@@ -51,8 +51,10 @@ export function DeliveryDetailsCard() {
       headerBg="bg-gradient-to-r from-[var(--color-primary-25)] to-white"
       title="Delivery Details"
       subtitle="Where should we deliver your pizza?"
+      collapsible
+      defaultOpen={false}
     >
-      <div class="p-6 flex flex-col gap-4">
+      <div class="p-3 sm:p-6 flex flex-col gap-3 sm:gap-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="flex flex-col gap-1.5">
             <label class="text-xs font-semibold text-[var(--color-neutral-500)] uppercase tracking-wider">
@@ -160,7 +162,7 @@ export function DeliveryDetailsCard() {
         </div>
 
         {/* Estimated delivery */}
-        <div class="flex items-center gap-3 mt-1 p-3 rounded-xl bg-[var(--color-green-50)] border border-[var(--color-green-100)]">
+        <div class="flex items-center gap-3 mt-1 p-2.5 sm:p-3 rounded-xl bg-[var(--color-green-50)] border border-[var(--color-green-100)]">
           <svg
             class="w-5 h-5 flex-shrink-0"
             viewBox="0 0 24 24"

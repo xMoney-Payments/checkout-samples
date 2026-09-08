@@ -22,9 +22,9 @@ export function PaymentSuccessCard(props: PaymentSuccessCardProps) {
   const [expanded, setExpanded] = createSignal(false);
 
   return (
-    <div class="max-w-md mx-auto animate-[slideInDown_0.35s_ease] mt-6">
+    <div class="max-w-md mx-auto animate-[slideInDown_0.35s_ease] mt-3 sm:mt-6">
       <div class="bg-white rounded-2xl border border-[var(--color-neutral-100)] shadow-[0_8px_40px_rgba(22,20,26,0.10)] overflow-hidden">
-        <div class="bg-gradient-to-br from-[var(--color-green-500)] to-[var(--color-green-600)] px-6 py-8 text-center text-white">
+        <div class="bg-gradient-to-br from-[var(--color-green-500)] to-[var(--color-green-600)] px-4 py-6 sm:px-6 sm:py-8 text-center text-white">
           <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
             <svg
               class="w-8 h-8"
@@ -49,7 +49,7 @@ export function PaymentSuccessCard(props: PaymentSuccessCardProps) {
           </div>
         </div>
 
-        <div class="p-6 flex flex-col gap-4">
+        <div class="p-4 sm:p-6 flex flex-col gap-4">
           <div class="flex flex-col gap-0 divide-y divide-[var(--color-neutral-100)]">
             <DetailRow label="Transaction ID" value={`#${result.id}`} mono />
             <DetailRow
@@ -124,7 +124,7 @@ export function PaymentSuccessCard(props: PaymentSuccessCardProps) {
           </Show>
         </div>
 
-        <div class="px-6 pb-6 flex flex-col gap-3">
+        <div class="px-4 pb-4 sm:px-6 sm:pb-6 flex flex-col gap-3">
           <button
             type="button"
             onClick={() => window.location.reload()}

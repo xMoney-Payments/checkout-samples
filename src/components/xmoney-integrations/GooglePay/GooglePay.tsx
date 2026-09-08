@@ -2,22 +2,36 @@ import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
 import { PUBLIC_KEY } from "../../../config";
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyGooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
+import { GooglePayInstance } from "../../../types/xmoney-sdk/google-pay-sdk.types";
+import type { GooglePayAppearance } from "../../../types/xmoney-sdk/sdk-base.types";
+
+const DEFAULT_APPEARANCE: GooglePayAppearance = {
+  color: "black",
+  type: "plain",
+  radius: 12,
+  height: 48,
+  borderType: "no_border",
+};
 
 interface GooglePayProps {
   payload: string;
   checksum: string;
-  onReady?: (instance: XMoneyGooglePayInstance | null) => void;
+  appearance?: GooglePayAppearance;
+  onReady?: (instance: GooglePayInstance | null) => void;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 export function GooglePay(props: GooglePayProps): JSX.Element {
   const [isLoading, setIsLoading] = createSignal(true);
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `google-pay-${Math.random().toString(36).substring(2, 15)}`;
-  let googlePayInstance: XMoneyGooglePayInstance | undefined;
+  let googlePayInstance: GooglePayInstance | undefined;
   let initialPayload: string | null = null;
+
+  const appearance = () => props.appearance ?? DEFAULT_APPEARANCE;
+  const buttonHeight = () => appearance().height ?? DEFAULT_APPEARANCE.height!;
 
   onMount(async () => {
     try {
@@ -32,6 +46,9 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
         orderChecksum: props.checksum,
         orderPayload: props.payload,
         publicKey: PUBLIC_KEY,
+        options: {
+          appearance: appearance(),
+        },
         onReady: () => {
           setIsReady(true);
           setIsLoading(false);
@@ -43,7 +60,7 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
           props.onError?.(err);
         },
         onPaymentProcessing: (isProcessing) => {
-          console.log("Google Pay payment processing:", isProcessing);
+          props.onPaymentProcessing?.(isProcessing);
         },
         onPaymentComplete: (result: TransactionDetails) => {
           props.onPaymentComplete?.(result);
@@ -74,10 +91,13 @@ export function GooglePay(props: GooglePayProps): JSX.Element {
   });
 
   return (
-    <div class="relative w-full h-10">
+    <div class="relative w-full" style={{ height: `${buttonHeight()}px` }}>
       {isLoading() && (
         <div>
-          <div class="w-full h-6 rounded-md bg-[linear-gradient(90deg,var(--color-neutral-100),var(--color-neutral-200),var(--color-neutral-100))] bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]" />
+          <div
+            class="w-full rounded-md bg-[linear-gradient(90deg,var(--color-neutral-100),var(--color-neutral-200),var(--color-neutral-100))] bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]"
+            style={{ height: `${buttonHeight()}px` }}
+          />
         </div>
       )}
       <div

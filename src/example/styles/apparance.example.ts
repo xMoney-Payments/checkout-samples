@@ -1,24 +1,14 @@
-export const darkThemeStyles: {
-  theme: "dark" | "light" | "custom";
-  variables?: Record<string, string>;
-  rules?: Record<string, Record<string, string>>;
-} = {
+import type { Appearance } from "../../types/xmoney-sdk/sdk-base.types";
+
+export const darkThemeStyles: Appearance = {
   theme: "dark",
 };
 
-export const lightThemeStyles: {
-  theme: "dark" | "light" | "custom";
-  variables?: Record<string, string>;
-  rules?: Record<string, Record<string, string>>;
-} = {
+export const lightThemeStyles: Appearance = {
   theme: "light",
 };
 
-export const customThemeStylesGreen: {
-  theme: "dark" | "light" | "custom";
-  variables: Record<string, string>;
-  rules: Record<string, Record<string, string>>;
-} = {
+export const customThemeStylesGreen: Appearance = {
   theme: "custom",
   variables: {
     colorPrimary: "#009688",
@@ -54,33 +44,10 @@ export const customThemeStylesGreen: {
       backgroundColor: "#f0f0f0",
       cursor: "not-allowed",
     },
-    ".xmoney-saved-card:hover": {
-      backgroundColor: "rgba(0, 77, 64, 0.04)",
-      borderColor: "#009688",
-      height: "180px",
-      borderRadius: "8px",
-    },
-    ".xmoney-saved-card--selected": {
-      backgroundColor: "rgba(0, 77, 64, 0.04)",
-      borderColor: "#004d40",
-      height: "200px",
-      borderRadius: "8px",
-    },
-    ".xmoney-saved-card--selected:hover": {
-      backgroundColor: "rgba(0, 77, 64, 0.04)",
-      borderColor: "#004d40",
-      height: "200px",
-      borderRadius: "8px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    },
   },
 };
 
-export const customThemeStylesBlue: {
-  theme: "dark" | "light" | "custom";
-  variables: Record<string, string>;
-  rules: Record<string, Record<string, string>>;
-} = {
+export const customThemeStylesBlue: Appearance = {
   theme: "custom",
   variables: {
     colorPrimary: "#42a5f5",
@@ -116,33 +83,10 @@ export const customThemeStylesBlue: {
       backgroundColor: "#f0f0f0",
       cursor: "not-allowed",
     },
-    ".xmoney-saved-card:hover": {
-      backgroundColor: "rgba(66, 165, 245, 0.04)",
-      borderColor: "#42a5f5",
-      height: "180px",
-      borderRadius: "8px",
-    },
-    ".xmoney-saved-card--selected": {
-      backgroundColor: "rgba(66, 165, 245, 0.04)",
-      borderColor: "#1565c0",
-      height: "200px",
-      borderRadius: "8px",
-    },
-    ".xmoney-saved-card--selected:hover": {
-      backgroundColor: "rgba(66, 165, 245, 0.04)",
-      borderColor: "#1565c0",
-      height: "200px",
-      borderRadius: "8px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    },
   },
 };
 
-export const customThemeStylesPurple: {
-  theme: "dark" | "light" | "custom";
-  variables: Record<string, string>;
-  rules: Record<string, Record<string, string>>;
-} = {
+export const customThemeStylesPurple: Appearance = {
   theme: "custom",
   variables: {
     colorPrimary: "#8e24aa",
@@ -177,25 +121,6 @@ export const customThemeStylesPurple: {
       borderColor: "gray",
       backgroundColor: "#f0f0f0",
       cursor: "not-allowed",
-    },
-    ".xmoney-saved-card:hover": {
-      backgroundColor: "rgba(142, 36, 170, 0.04)",
-      borderColor: "#8e24aa",
-      height: "180px",
-      borderRadius: "8px",
-    },
-    ".xmoney-saved-card--selected": {
-      backgroundColor: "rgba(142, 36, 170, 0.04)",
-      borderColor: "#4a148c",
-      height: "200px",
-      borderRadius: "8px",
-    },
-    ".xmoney-saved-card--selected:hover": {
-      backgroundColor: "rgba(142, 36, 170, 0.04)",
-      borderColor: "#4a148c",
-      height: "200px",
-      borderRadius: "8px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
     },
   },
 };

@@ -3,21 +3,28 @@ import { JSX } from "solid-js/jsx-runtime";
 import { PUBLIC_KEY } from "../../../config";
 
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyPaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
+import { PaymentCardInstance } from "../../../types/xmoney-sdk/payment-card-sdk.types";
+import type {
+  PaymentChangeEvent,
+  ValidationEvent,
+} from "../../../types/xmoney-sdk/sdk-base.types";
 import { LoadingSpinner } from "../../ui/LoadingSpinner/LoadingSpinner";
 
 interface PaymentCardProps {
   payload: string;
   checksum: string;
-  onReady?: (instance: XMoneyPaymentCardInstance | null) => void;
+  onReady?: (instance: PaymentCardInstance | null) => void;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
   onPaymentProcessing?: (isProcessing: boolean) => void;
+  onPaymentChange?: (event: PaymentChangeEvent) => void;
+  onValidation?: (event: ValidationEvent) => void;
   hideSubmitButton?: boolean;
+  savedCardsEnabled?: boolean;
 }
 
 export function PaymentCard(props: PaymentCardProps): JSX.Element {
-  let paymentCardInstance: XMoneyPaymentCardInstance | undefined;
+  let paymentCardInstance: PaymentCardInstance | undefined;
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `container-${Math.random().toString(36).substring(2, 15)}`;
 
@@ -33,8 +40,14 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
       container: containerId,
       card: {
         savedCards: {
-          enabled: false,
+          enabled: props.savedCardsEnabled ?? false,
           optInVisible: true,
+        },
+        cardHolderName: {
+          visible: true,
+        },
+        inputs: {
+          grouping: "spaced",
         },
         submitButton: {
           visible: !props.hideSubmitButton,
@@ -58,6 +71,12 @@ export function PaymentCard(props: PaymentCardProps): JSX.Element {
       },
       onPaymentComplete: (result: TransactionDetails) => {
         props.onPaymentComplete?.(result);
+      },
+      onPaymentChange: (event) => {
+        props.onPaymentChange?.(event);
+      },
+      onValidation: (event) => {
+        props.onValidation?.(event);
       },
     });
   });

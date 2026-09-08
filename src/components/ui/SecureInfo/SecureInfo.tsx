@@ -1,6 +1,6 @@
 export function SecureInfo() {
   return (
-    <div class="flex items-center justify-center gap-2 mt-5">
+    <div class="flex items-center justify-center gap-2 mt-3 sm:mt-5">
       <svg
         class="w-3.5 h-3.5"
         viewBox="0 0 24 24"

@@ -1,23 +1,36 @@
 import { createSignal, createEffect, onMount, onCleanup, JSX } from "solid-js";
 
 import { TransactionDetails } from "../../../types/checkout.types";
-import { XMoneyApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
+import { ApplePayInstance } from "../../../types/xmoney-sdk/apple-pay-sdk.types";
+import type { ApplePayAppearance } from "../../../types/xmoney-sdk/sdk-base.types";
 import { PUBLIC_KEY } from "../../../config";
+
+const DEFAULT_APPEARANCE: ApplePayAppearance = {
+  style: "black",
+  type: "plain",
+  radius: 12,
+  height: 48,
+};
 
 interface ApplePayProps {
   payload: string;
   checksum: string;
-  onReady?: (instance: XMoneyApplePayInstance | null) => void;
+  appearance?: ApplePayAppearance;
+  onReady?: (instance: ApplePayInstance | null) => void;
   onPaymentComplete?: (result: TransactionDetails) => void;
   onError?: (error: any) => void;
+  onPaymentProcessing?: (isProcessing: boolean) => void;
 }
 
 export function ApplePay(props: ApplePayProps): JSX.Element {
   const [isLoading, setIsLoading] = createSignal(true);
   const [isReady, setIsReady] = createSignal(false);
   const containerId = `apple-pay-${Math.random().toString(36).substring(2, 15)}`;
-  let applePayInstance: XMoneyApplePayInstance;
+  let applePayInstance: ApplePayInstance;
   let initialPayload: string | null = null;
+
+  const appearance = () => props.appearance ?? DEFAULT_APPEARANCE;
+  const buttonHeight = () => appearance().height ?? DEFAULT_APPEARANCE.height!;
 
   onMount(async () => {
     try {
@@ -33,6 +46,9 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
         orderChecksum: props.checksum,
         orderPayload: props.payload,
         publicKey: PUBLIC_KEY,
+        options: {
+          appearance: appearance(),
+        },
         onReady: () => {
           setIsReady(true);
           setIsLoading(false);
@@ -44,7 +60,7 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
           props.onError?.(err);
         },
         onPaymentProcessing: (isProcessing) => {
-          console.log("Apple Pay payment processing:", isProcessing);
+          props.onPaymentProcessing?.(isProcessing);
         },
         onPaymentComplete: (result: TransactionDetails) => {
           props.onPaymentComplete?.(result);
@@ -75,10 +91,13 @@ export function ApplePay(props: ApplePayProps): JSX.Element {
   });
 
   return (
-    <div class="relative w-full h-10">
+    <div class="relative w-full" style={{ height: `${buttonHeight()}px` }}>
       {isLoading() && (
         <div>
-          <div class="w-full h-6 rounded-md bg-[linear-gradient(90deg,var(--color-neutral-100),var(--color-neutral-200),var(--color-neutral-100))] bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]" />
+          <div
+            class="w-full rounded-md bg-[linear-gradient(90deg,var(--color-neutral-100),var(--color-neutral-200),var(--color-neutral-100))] bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]"
+            style={{ height: `${buttonHeight()}px` }}
+          />
         </div>
       )}
       <div
